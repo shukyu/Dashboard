@@ -1,0 +1,416 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Dashboard - misc</title><link href="/" rel="alternate"></link><link href="/feeds/misc.atom.xml" rel="self"></link><id>/</id><updated>2019-08-11T00:00:00+09:00</updated><entry><title>[Encrypted] 関東リーグ第11節vs早稲田大学</title><link href="/11sec_vsWaseda.html" rel="alternate"></link><published>2019-08-11T00:00:00+09:00</published><updated>2019-08-11T00:00:00+09:00</updated><author><name>AtomScott</name></author><id>tag:None,2019-08-11:/11sec_vsWaseda.html</id><summary type="html">&lt;div id="pec-encrypted-content" style="display:none"&gt;YFrulx45Hqrw8V7weiiWwQ==;3MBAkyLi8ak0insS1cf2JfaHg5Uhn0LKdK4vH0Kn9zc=;^&lt;/div&gt;
+&lt;div id="pec-decrypted-content"&gt;
+    &lt;h4&gt;&lt;i&gt;This content is encrypted.&lt;/i&gt;&lt;/h4&gt;
+&lt;/div&gt;
+
+&lt;form id="pec-decrypt-form"&gt;
+    &lt;label for="pec-content-password"&gt;Password&lt;/label&gt;
+    &lt;input type="password" id="pec-content-password" placeholder="Password" /&gt;
+    &lt;button type="button" id="pec-decrypt-content"&gt;Decrypt&lt;/button&gt;
+&lt;/form&gt;
+
+
+    &lt;script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/components/core.js"&gt;&lt;/script&gt;
+
+    &lt;script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/components/enc-base64.js"&gt;&lt;/script&gt;
+
+    &lt;script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/components/cipher-core.js"&gt;&lt;/script&gt;
+
+    &lt;script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/components/pad-nopadding.js"&gt;&lt;/script&gt;
+
+    &lt;script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/components/md5.js"&gt;&lt;/script&gt;
+
+    &lt;script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/components/aes.js"&gt;&lt;/script&gt;
+
+
+&lt;script type="text/javascript"&gt;
+    (function () {
+        var strip_padding = function (padded_content, padding_char) {
+            /*
+             * Strips the padding character from decrypted content.
+             */
+            for (var i = padded_content.length; i &gt; 0; i--) {
+                if (padded_content[i-1] !== padding_char) {
+                    return padded_content.slice(0, i);
+                }
+            }
+        };
+
+        var decrypt_content = function (password, iv_b64, ciphertext_b64, padding_char) {
+            /*
+             * Decrypts the content from the …&lt;/script&gt;</summary><content type="html">&lt;div id="pec-encrypted-content" style="display:none"&gt;YFrulx45Hqrw8V7weiiWwQ==;3MBAkyLi8ak0insS1cf2JfaHg5Uhn0LKdK4vH0Kn9zc=;^&lt;/div&gt;
+&lt;div id="pec-decrypted-content"&gt;
+    &lt;h4&gt;&lt;i&gt;This content is encrypted.&lt;/i&gt;&lt;/h4&gt;
+&lt;/div&gt;
+
+&lt;form id="pec-decrypt-form"&gt;
+    &lt;label for="pec-content-password"&gt;Password&lt;/label&gt;
+    &lt;input type="password" id="pec-content-password" placeholder="Password" /&gt;
+    &lt;button type="button" id="pec-decrypt-content"&gt;Decrypt&lt;/button&gt;
+&lt;/form&gt;
+
+
+    &lt;script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/components/core.js"&gt;&lt;/script&gt;
+
+    &lt;script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/components/enc-base64.js"&gt;&lt;/script&gt;
+
+    &lt;script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/components/cipher-core.js"&gt;&lt;/script&gt;
+
+    &lt;script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/components/pad-nopadding.js"&gt;&lt;/script&gt;
+
+    &lt;script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/components/md5.js"&gt;&lt;/script&gt;
+
+    &lt;script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/components/aes.js"&gt;&lt;/script&gt;
+
+
+&lt;script type="text/javascript"&gt;
+    (function () {
+        var strip_padding = function (padded_content, padding_char) {
+            /*
+             * Strips the padding character from decrypted content.
+             */
+            for (var i = padded_content.length; i &gt; 0; i--) {
+                if (padded_content[i-1] !== padding_char) {
+                    return padded_content.slice(0, i);
+                }
+            }
+        };
+
+        var decrypt_content = function (password, iv_b64, ciphertext_b64, padding_char) {
+            /*
+             * Decrypts the content from the ciphertext bundle.
+             */
+            var key = CryptoJS.MD5(password),
+                iv = CryptoJS.enc.Base64.parse(iv_b64),
+                ciphertext = CryptoJS.enc.Base64.parse(ciphertext_b64),
+                bundle = {
+                    key: key,
+                    iv: iv,
+                    ciphertext: ciphertext
+                };
+
+            var plaintext = CryptoJS.AES.decrypt(bundle, key, {iv: iv, padding: CryptoJS.pad.NoPadding});
+
+            try {
+                return strip_padding(plaintext.toString(CryptoJS.enc.Utf8), padding_char);
+            }
+            catch (err) {
+                // encoding failed; wrong password
+                return false;
+            }
+        };
+
+        var init_decryptor = function() {
+            var decrypt_btn = document.getElementById('pec-decrypt-content'),
+                password_input = document.getElementById('pec-content-password'),
+                encrypted_content = document.getElementById('pec-encrypted-content'),
+                decrypted_content = document.getElementById('pec-decrypted-content'),
+                decrypt_form = document.getElementById('pec-decrypt-form');
+
+            decrypt_btn.addEventListener('click', function () {
+                // grab the ciphertext bundle
+                var parts = encrypted_content.innerHTML.split(';');
+
+                // decrypt it
+                var content = decrypt_content(
+                    password_input.value,
+                    parts[0],
+                    parts[1],
+                    parts[2]
+                );
+
+                if (content) {
+                    // success; display the decrypted content
+                    decrypted_content.innerHTML = content;
+                    decrypt_form.parentNode.removeChild(decrypt_form);
+                    encrypted_content.parentNode.removeChild(encrypted_content);
+
+                    // any post processing on the decrypted content should be done here
+                }
+                else {
+                    // ¯\_(ツ)_/¯
+                    password_input.value = '';
+                }
+            });
+        };
+
+        document.addEventListener('DOMContentLoaded', init_decryptor);
+    })();
+&lt;/script&gt;</content></entry><entry><title>[Encrypted] 関東リーグ第7節vs流通経済大学</title><link href="/7sec_vsRKU.html" rel="alternate"></link><published>2019-06-01T00:00:00+09:00</published><updated>2019-06-01T00:00:00+09:00</updated><author><name>AtomScott</name></author><id>tag:None,2019-06-01:/7sec_vsRKU.html</id><summary type="html">&lt;div id="pec-encrypted-content" style="display:none"&gt;q95rTSnGXDeerOHoELrVGA==;EemZv59pfQUtVTSiT+Sr3PuaBXtpsnyz046Qim5d4Lk=;^&lt;/div&gt;
+&lt;div id="pec-decrypted-content"&gt;
+    &lt;h4&gt;&lt;i&gt;This content is encrypted.&lt;/i&gt;&lt;/h4&gt;
+&lt;/div&gt;
+
+&lt;form id="pec-decrypt-form"&gt;
+    &lt;label for="pec-content-password"&gt;Password&lt;/label&gt;
+    &lt;input type="password" id="pec-content-password" placeholder="Password" /&gt;
+    &lt;button type="button" id="pec-decrypt-content"&gt;Decrypt&lt;/button&gt;
+&lt;/form&gt;
+
+
+    &lt;script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/components/core.js"&gt;&lt;/script&gt;
+
+    &lt;script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/components/enc-base64.js"&gt;&lt;/script&gt;
+
+    &lt;script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/components/cipher-core.js"&gt;&lt;/script&gt;
+
+    &lt;script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/components/pad-nopadding.js"&gt;&lt;/script&gt;
+
+    &lt;script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/components/md5.js"&gt;&lt;/script&gt;
+
+    &lt;script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/components/aes.js"&gt;&lt;/script&gt;
+
+
+&lt;script type="text/javascript"&gt;
+    (function () {
+        var strip_padding = function (padded_content, padding_char) {
+            /*
+             * Strips the padding character from decrypted content.
+             */
+            for (var i = padded_content.length; i &gt; 0; i--) {
+                if (padded_content[i-1] !== padding_char) {
+                    return padded_content.slice(0, i);
+                }
+            }
+        };
+
+        var decrypt_content = function (password, iv_b64, ciphertext_b64, padding_char) {
+            /*
+             * Decrypts the content from …&lt;/script&gt;</summary><content type="html">&lt;div id="pec-encrypted-content" style="display:none"&gt;q95rTSnGXDeerOHoELrVGA==;EemZv59pfQUtVTSiT+Sr3PuaBXtpsnyz046Qim5d4Lk=;^&lt;/div&gt;
+&lt;div id="pec-decrypted-content"&gt;
+    &lt;h4&gt;&lt;i&gt;This content is encrypted.&lt;/i&gt;&lt;/h4&gt;
+&lt;/div&gt;
+
+&lt;form id="pec-decrypt-form"&gt;
+    &lt;label for="pec-content-password"&gt;Password&lt;/label&gt;
+    &lt;input type="password" id="pec-content-password" placeholder="Password" /&gt;
+    &lt;button type="button" id="pec-decrypt-content"&gt;Decrypt&lt;/button&gt;
+&lt;/form&gt;
+
+
+    &lt;script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/components/core.js"&gt;&lt;/script&gt;
+
+    &lt;script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/components/enc-base64.js"&gt;&lt;/script&gt;
+
+    &lt;script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/components/cipher-core.js"&gt;&lt;/script&gt;
+
+    &lt;script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/components/pad-nopadding.js"&gt;&lt;/script&gt;
+
+    &lt;script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/components/md5.js"&gt;&lt;/script&gt;
+
+    &lt;script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/components/aes.js"&gt;&lt;/script&gt;
+
+
+&lt;script type="text/javascript"&gt;
+    (function () {
+        var strip_padding = function (padded_content, padding_char) {
+            /*
+             * Strips the padding character from decrypted content.
+             */
+            for (var i = padded_content.length; i &gt; 0; i--) {
+                if (padded_content[i-1] !== padding_char) {
+                    return padded_content.slice(0, i);
+                }
+            }
+        };
+
+        var decrypt_content = function (password, iv_b64, ciphertext_b64, padding_char) {
+            /*
+             * Decrypts the content from the ciphertext bundle.
+             */
+            var key = CryptoJS.MD5(password),
+                iv = CryptoJS.enc.Base64.parse(iv_b64),
+                ciphertext = CryptoJS.enc.Base64.parse(ciphertext_b64),
+                bundle = {
+                    key: key,
+                    iv: iv,
+                    ciphertext: ciphertext
+                };
+
+            var plaintext = CryptoJS.AES.decrypt(bundle, key, {iv: iv, padding: CryptoJS.pad.NoPadding});
+
+            try {
+                return strip_padding(plaintext.toString(CryptoJS.enc.Utf8), padding_char);
+            }
+            catch (err) {
+                // encoding failed; wrong password
+                return false;
+            }
+        };
+
+        var init_decryptor = function() {
+            var decrypt_btn = document.getElementById('pec-decrypt-content'),
+                password_input = document.getElementById('pec-content-password'),
+                encrypted_content = document.getElementById('pec-encrypted-content'),
+                decrypted_content = document.getElementById('pec-decrypted-content'),
+                decrypt_form = document.getElementById('pec-decrypt-form');
+
+            decrypt_btn.addEventListener('click', function () {
+                // grab the ciphertext bundle
+                var parts = encrypted_content.innerHTML.split(';');
+
+                // decrypt it
+                var content = decrypt_content(
+                    password_input.value,
+                    parts[0],
+                    parts[1],
+                    parts[2]
+                );
+
+                if (content) {
+                    // success; display the decrypted content
+                    decrypted_content.innerHTML = content;
+                    decrypt_form.parentNode.removeChild(decrypt_form);
+                    encrypted_content.parentNode.removeChild(encrypted_content);
+
+                    // any post processing on the decrypted content should be done here
+                }
+                else {
+                    // ¯\_(ツ)_/¯
+                    password_input.value = '';
+                }
+            });
+        };
+
+        document.addEventListener('DOMContentLoaded', init_decryptor);
+    })();
+&lt;/script&gt;</content></entry><entry><title>[Encrypted] 関東リーグ第9節vs法政大学</title><link href="/8sec_vsHosei.html" rel="alternate"></link><published>2019-06-01T00:00:00+09:00</published><updated>2019-06-01T00:00:00+09:00</updated><author><name>AtomScott</name></author><id>tag:None,2019-06-01:/8sec_vsHosei.html</id><summary type="html">&lt;div id="pec-encrypted-content" style="display:none"&gt;AXxslBLW0JPg9OX/Hwhoeg==;gA5iHs0mpJt/I0k5dTrQhxGNgv1zK4mQjdSngmcfkl8=;^&lt;/div&gt;
+&lt;div id="pec-decrypted-content"&gt;
+    &lt;h4&gt;&lt;i&gt;This content is encrypted.&lt;/i&gt;&lt;/h4&gt;
+&lt;/div&gt;
+
+&lt;form id="pec-decrypt-form"&gt;
+    &lt;label for="pec-content-password"&gt;Password&lt;/label&gt;
+    &lt;input type="password" id="pec-content-password" placeholder="Password" /&gt;
+    &lt;button type="button" id="pec-decrypt-content"&gt;Decrypt&lt;/button&gt;
+&lt;/form&gt;
+
+
+    &lt;script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/components/core.js"&gt;&lt;/script&gt;
+
+    &lt;script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/components/enc-base64.js"&gt;&lt;/script&gt;
+
+    &lt;script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/components/cipher-core.js"&gt;&lt;/script&gt;
+
+    &lt;script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/components/pad-nopadding.js"&gt;&lt;/script&gt;
+
+    &lt;script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/components/md5.js"&gt;&lt;/script&gt;
+
+    &lt;script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/components/aes.js"&gt;&lt;/script&gt;
+
+
+&lt;script type="text/javascript"&gt;
+    (function () {
+        var strip_padding = function (padded_content, padding_char) {
+            /*
+             * Strips the padding character from decrypted content.
+             */
+            for (var i = padded_content.length; i &gt; 0; i--) {
+                if (padded_content[i-1] !== padding_char) {
+                    return padded_content.slice(0, i);
+                }
+            }
+        };
+
+        var decrypt_content = function (password, iv_b64, ciphertext_b64, padding_char) {
+            /*
+             * Decrypts the content …&lt;/script&gt;</summary><content type="html">&lt;div id="pec-encrypted-content" style="display:none"&gt;AXxslBLW0JPg9OX/Hwhoeg==;gA5iHs0mpJt/I0k5dTrQhxGNgv1zK4mQjdSngmcfkl8=;^&lt;/div&gt;
+&lt;div id="pec-decrypted-content"&gt;
+    &lt;h4&gt;&lt;i&gt;This content is encrypted.&lt;/i&gt;&lt;/h4&gt;
+&lt;/div&gt;
+
+&lt;form id="pec-decrypt-form"&gt;
+    &lt;label for="pec-content-password"&gt;Password&lt;/label&gt;
+    &lt;input type="password" id="pec-content-password" placeholder="Password" /&gt;
+    &lt;button type="button" id="pec-decrypt-content"&gt;Decrypt&lt;/button&gt;
+&lt;/form&gt;
+
+
+    &lt;script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/components/core.js"&gt;&lt;/script&gt;
+
+    &lt;script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/components/enc-base64.js"&gt;&lt;/script&gt;
+
+    &lt;script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/components/cipher-core.js"&gt;&lt;/script&gt;
+
+    &lt;script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/components/pad-nopadding.js"&gt;&lt;/script&gt;
+
+    &lt;script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/components/md5.js"&gt;&lt;/script&gt;
+
+    &lt;script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/components/aes.js"&gt;&lt;/script&gt;
+
+
+&lt;script type="text/javascript"&gt;
+    (function () {
+        var strip_padding = function (padded_content, padding_char) {
+            /*
+             * Strips the padding character from decrypted content.
+             */
+            for (var i = padded_content.length; i &gt; 0; i--) {
+                if (padded_content[i-1] !== padding_char) {
+                    return padded_content.slice(0, i);
+                }
+            }
+        };
+
+        var decrypt_content = function (password, iv_b64, ciphertext_b64, padding_char) {
+            /*
+             * Decrypts the content from the ciphertext bundle.
+             */
+            var key = CryptoJS.MD5(password),
+                iv = CryptoJS.enc.Base64.parse(iv_b64),
+                ciphertext = CryptoJS.enc.Base64.parse(ciphertext_b64),
+                bundle = {
+                    key: key,
+                    iv: iv,
+                    ciphertext: ciphertext
+                };
+
+            var plaintext = CryptoJS.AES.decrypt(bundle, key, {iv: iv, padding: CryptoJS.pad.NoPadding});
+
+            try {
+                return strip_padding(plaintext.toString(CryptoJS.enc.Utf8), padding_char);
+            }
+            catch (err) {
+                // encoding failed; wrong password
+                return false;
+            }
+        };
+
+        var init_decryptor = function() {
+            var decrypt_btn = document.getElementById('pec-decrypt-content'),
+                password_input = document.getElementById('pec-content-password'),
+                encrypted_content = document.getElementById('pec-encrypted-content'),
+                decrypted_content = document.getElementById('pec-decrypted-content'),
+                decrypt_form = document.getElementById('pec-decrypt-form');
+
+            decrypt_btn.addEventListener('click', function () {
+                // grab the ciphertext bundle
+                var parts = encrypted_content.innerHTML.split(';');
+
+                // decrypt it
+                var content = decrypt_content(
+                    password_input.value,
+                    parts[0],
+                    parts[1],
+                    parts[2]
+                );
+
+                if (content) {
+                    // success; display the decrypted content
+                    decrypted_content.innerHTML = content;
+                    decrypt_form.parentNode.removeChild(decrypt_form);
+                    encrypted_content.parentNode.removeChild(encrypted_content);
+
+                    // any post processing on the decrypted content should be done here
+                }
+                else {
+                    // ¯\_(ツ)_/¯
+                    password_input.value = '';
+                }
+            });
+        };
+
+        document.addEventListener('DOMContentLoaded', init_decryptor);
+    })();
+&lt;/script&gt;</content></entry></feed>
