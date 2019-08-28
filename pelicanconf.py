@@ -4,7 +4,7 @@ from __future__ import unicode_literals
 
 AUTHOR = 'AtomScott'
 SITENAME = 'Dashboard'
-SITEURL = ''
+SITEURL = 'https://shukyu.github.io/Dashboard'
 
 PATH = 'content'
 
@@ -33,7 +33,7 @@ SOCIAL = (('You can add links in your config file', '#'),
 
 DEFAULT_PAGINATION = 10
 #encrypted
-PLUGINS = ['encrypt_content']
+PLUGINS = []
 ENCRYPT_CONTENT = {
     'title_prefix': '[Encrypted]',
     'summary': 'This content is encrypted.'
