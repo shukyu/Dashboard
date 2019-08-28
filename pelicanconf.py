@@ -10,7 +10,7 @@ PATH = 'content'
 
 TIMEZONE = 'Japan'
 
-DEFAULT_LANG = 'jp'
+DEFAULT_LANG = 'en'
 #Copy the encrypt_content folder to the root of your Pelican project (or somewhere that is accessible for importing),and, add the following to your pelicanconf.py file:
 
 # Feed generation is usually not desired when developing
@@ -19,7 +19,8 @@ CATEGORY_FEED_ATOM = None
 TRANSLATION_FEED_ATOM = None
 AUTHOR_FEED_ATOM = None
 AUTHOR_FEED_RSS = None
-
+DELETE_OUTPUT_DIRECTORY = True
+OUTPUT_PATH = 'docs/'
 # Blogroll
 LINKS = (('Pelican', 'http://getpelican.com/'),
          ('Python.org', 'http://python.org/'),
