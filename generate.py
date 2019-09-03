@@ -22,7 +22,7 @@ class MatchData:
         self.gps_path = 'data/{0}/gps'.format(match_name)
         self.event_path = 'data/{0}/splyza'.format(match_name)
         self.init_yaml()
-        self.outpath = 'myTheme/static/graphs/'+match_name+'/'
+        self.outpath = 'theme/graphs/'+match_name+'/'
         pathlib.Path(self.outpath).mkdir(parents=True, exist_ok=True) 
         
         self.gps_data = self.get_gps_data()
