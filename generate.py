@@ -11,7 +11,7 @@ import numpy as np
 import pandas as pd
 import seaborn as sns
 import datetime as dt
-import matplotlib.pyplot as plt 
+import matplotlib.pyplot as plt
 
 from yaml import Loader
 
@@ -22,25 +22,25 @@ class MatchData:
         self.gps_path = 'data/{0}/gps'.format(match_name)
         self.event_path = 'data/{0}/splyza'.format(match_name)
         self.init_yaml()
-        self.outpath = 'theme/graphs/'+match_name+'/'
-        pathlib.Path(self.outpath).mkdir(parents=True, exist_ok=True) 
-        
+        self.outpath = 'myTheme/static/graphs/'+match_name+'/'
+        pathlib.Path(self.outpath).mkdir(parents=True, exist_ok=True)
+
         self.gps_data = self.get_gps_data()
         self.event_data = self.get_event_data()
         self.data = self.generate_data()
-        
+
     def init_yaml(self):
         f = open("content/"+self.match_name+'.md',"r")
         text = f.read().split('---')[0]
         self.yaml = yaml.load(text, Loader=Loader)
-        
-        
-    def get_gps_data(self): 
+
+
+    def get_gps_data(self):
         path = self.gps_path
         start = dt.time.min
         end = dt.time.max
         d = {}
-        
+
         for f in os.listdir(path):
             if f.endswith('.csv'):
 
@@ -56,7 +56,7 @@ class MatchData:
                 end = max(end, _end)
 
                 # 個人のGPSデータの取得
-                _df = pd.read_csv('{0}/{1}'.format(path, f), skiprows=7, 
+                _df = pd.read_csv('{0}/{1}'.format(path, f), skiprows=7,
                                   usecols=[
                                       'Time',
                                       'Speed (km/h)',
@@ -68,23 +68,23 @@ class MatchData:
         self.start = start
         self.end = end
         return d
-    
+
     def get_event_data(self):
         path = self.event_path
         flist = os.listdir(path)
         data = [pd.read_csv('{0}/{1}'.format(path, f), index_col=0) for f in os.listdir(path)]
-        
-        for i, d in enumerate(data):                
+
+        for i, d in enumerate(data):
             data[i].index = data[i].index.map(lambda x: dt.time(*time.strptime(x[4:12], '%M:%S:%f')[3:6]))
-            
+
         d = {'h1':data[0],'h2':data[1]}
         return d
-    
+
     def generate_data(self):
         gps_data = self.gps_data
         event_data = self.event_data
         return gps_data, event_data
-    
+
     def get_count(self, attr):
         try:
             d = pd.concat((self.event_data['h1'],self.event_data['h2']), sort=False)
@@ -92,7 +92,7 @@ class MatchData:
         except:
             value = 0
         return value
-    
+
     def stats_hbar(self, meta=None, show=False):
         '''
         Sample data to give to this is:
@@ -119,7 +119,7 @@ class MatchData:
                 'set':f(['スローイン', 'CK', 'FK', 'PK']),
                 'foul':f(['ファール', 'オフサイド']),
             }
-                    
+
         text_left = 0 # Used for formatting text
         color = ["dark", "muted", "pastel"]
         for chart_name, chart_data in meta.items():
@@ -134,14 +134,14 @@ class MatchData:
                     sns.barplot(x=attr_name, y="events", data=chart_data, label=attr_name, color="b")
                     text_left = max(text_left, max(attr_data))
                     i+=1
-                    
+
             i=0
             text_left = text_left/20
             for event, kaisu in zip(chart_data['events'],chart_data['回数']):
                 ax.text(text_left,i-0.15, event, fontsize=35, color='white')
                 ax.text(text_left,i+0.15, '{0}'.format(kaisu), fontsize=35, color='red')
                 i+=1
-            
+
             # Add a legend and informative axis label
             ax.legend(ncol=2, loc="lower right", frameon=True)
             plt.axis('off')
@@ -151,7 +151,7 @@ class MatchData:
                 plt.savefig("{0}hbar_{1}.png".format(self.outpath, chart_name), transparent=True,bbox_inches='tight')
                 plt.cla()
             else:
-                plt.show() 
+                plt.show()
 
     def rank_table(self, show=False):
         h1 = self.event_data['h1'].reset_index()
@@ -175,8 +175,8 @@ class MatchData:
                     plt.savefig("{0}/{1}.png".format(self.outpath, name), transparent=True,bbox_inches='tight')
                     plt.cla()
                 else:
-                    plt.show() 
-                    
+                    plt.show()
+
     def plot_pitch(self, height=68, width=105, xos=0, yofs=0):
         hscaler = 68 / height
         wscaler = 105 / width
@@ -266,7 +266,7 @@ class MatchData:
 
         # Display Pitch
         return fig, ax
-    
+
     def render_mpl_table(self, data, col_width=3.0, row_height=0.625, font_size=14,
                          header_color='#40466e', row_colors=['#f1f1f2', 'w'], edge_color='w',
                          bbox=[0, 0, 1, 1], header_columns=0,
@@ -305,5 +305,3 @@ def main():
         match_data = MatchData(match)
         match_data.stats_hbar()
         match_data.rank_table()
-        
-
