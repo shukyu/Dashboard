@@ -1,10 +1,14 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*- #
 from __future__ import unicode_literals
+import argparse
+
+parser = argparse.ArgumentParser(description='このプログラムの説明（なくてもよい）')
+parser.add_argument('--localhost', help='この引数の説明（なくてもよい）')
 
 AUTHOR = 'AtomScott'
 SITENAME = 'Dashboard'
-SITEURL = 'https://shukyu.github.io/Dashboard'
+SITEURL = ''
 
 PATH = 'content'
 
