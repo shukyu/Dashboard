@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>筑波大学スタッツ</title>
+
+    <!-- Custom fonts for this template-->
+    <link href="https://shukyu.github.io/Dashboard/theme/css/all.min.css" rel="stylesheet" type="text/css">
+    <link
+        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+        rel="stylesheet">
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
+
+
+    <!-- Custom styles for this template-->
+    <link href="https://shukyu.github.io/Dashboard/theme/css/sb-admin-2.min.css" rel="stylesheet">
+    <link href="https://shukyu.github.io/Dashboard/theme/css/mystyle.css" rel="stylesheet">
+
+    <!-- Bootstrap core JavaScript-->
+    <script src="https://shukyu.github.io/Dashboard/theme/js/jquery.min.js"></script>
+    <script src="https://shukyu.github.io/Dashboard/theme/js/bootstrap.bundle.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdn.pydata.org/bokeh/release/bokeh-1.0.4.min.css" type="text/css" />    
+    <script type="text/javascript" src="https://cdn.pydata.org/bokeh/release/bokeh-1.0.4.min.js"></script>
+
+
+</head>
+
+<body id="page-top">
+
+    <!-- Page Wrapper -->
+    <div id="wrapper">
+
+        <!-- Sidebar -->
+        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+
+            <!-- Sidebar - Brand -->
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
+                <div class="sidebar-brand-text mx-3">Data Team</div>
+            </a>
+
+            <!-- Divider -->
+            <hr class="sidebar-divider my-0">
+
+            <!-- Nav Item - Dashboard -->
+            <li class="nav-item active">
+                <a class="nav-link" href="index.html">
+                    <i class="fas fa-fw fa-tachometer-alt"></i>
+                    <span>トップページ</span></a>
+            </li>
+
+            <!-- Divider -->
+            <hr class="sidebar-divider">
+
+            <!-- Heading -->
+            <div class="sidebar-heading">
+                試合一覧
+            </div>
+
+            <!-- Nav Item - Pages Collapse Menu -->
+            <li class="nav-item">
+                <a class="nav-link " href="https://shukyu.github.io/Dashboard/11sec_vsWaseda">
+                        <i class="fas fa-fw fa-futbol"></i>
+                        <span>関東リーグ第11節vs早稲田大学</span>
+                </a>    
+                <a class="nav-link " href="https://shukyu.github.io/Dashboard/9sec_vsSenshu">
+                        <i class="fas fa-fw fa-futbol"></i>
+                        <span>関東リーグ第9節vs専修大学</span>
+                </a>    
+                <a class="nav-link " href="https://shukyu.github.io/Dashboard/7sec_vsRKU">
+                        <i class="fas fa-fw fa-futbol"></i>
+                        <span>関東リーグ第7節vs流通経済大学</span>
+                </a>    
+                <a class="nav-link " href="https://shukyu.github.io/Dashboard/8sec_vsHosei">
+                        <i class="fas fa-fw fa-futbol"></i>
+                        <span>関東リーグ第8節vs法政大学</span>
+                </a>    
+                <a class="nav-link " href="https://shukyu.github.io/Dashboard/4sec_vsChuo">
+                        <i class="fas fa-fw fa-futbol"></i>
+                        <span>関東リーグ第6節vs中央大学</span>
+                </a>    
+                <a class="nav-link " href="https://shukyu.github.io/Dashboard/5sec_vsJunten">
+                        <i class="fas fa-fw fa-futbol"></i>
+                        <span>関東リーグ第5節vs順天堂大学</span>
+                </a>    
+                <a class="nav-link " href="https://shukyu.github.io/Dashboard/4sec_vsMeiji">
+                        <i class="fas fa-fw fa-futbol"></i>
+                        <span>関東リーグ第4節vs明治大学</span>
+                </a>    
+                <a class="nav-link " href="https://shukyu.github.io/Dashboard/3sec_vsToyo">
+                        <i class="fas fa-fw fa-futbol"></i>
+                        <span>関東リーグ第3節vs東洋大学</span>
+                </a>    
+                <a class="nav-link " href="https://shukyu.github.io/Dashboard/2sec_vsToin">
+                        <i class="fas fa-fw fa-futbol"></i>
+                        <span>関東リーグ第2節vs桐蔭横浜大学</span>
+                </a>    
+            </li>
+
+
+
+            <!-- Sidebar Toggler (Sidebar) -->
+            <div class="text-center d-none d-md-inline">
+                <button class="rounded-circle border-0" id="sidebarToggle"></button>
+            </div>
+
+        </ul>
+        <!-- End of Sidebar -->
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
+
+            <!-- Main Content -->
+            <div id="content">
+                <!-- Topbar -->
+                <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+
+                    <!-- Sidebar Toggle (Topbar) -->
+                    <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
+                        <i class="fa fa-bars"></i>
+                    </button>
+
+                    <h1>筑波大学スタッツシート</h1>
+
+                </nav>
+                <!-- End of Topbar -->
+
+
+
+<!-- Begin Page Content -->
+<div class="container justify-content-center text-center">
+  <!--試合情報ここから-->
+  <div class="row justify-content-center text-center">
+    <div class="col-4">
+      <h1>筑波大学</h1>
+      <img src="https://shukyu.github.io/Dashboard/theme/images/teamlogo/tsukuba.png" style="height:200px; width:200px" class="img-thumbnail" alt="Responsive image">
+    </div>
+    <div class="col-4">
+      <table class="table">
+        <thead>
+          <tr>
+            <th colspan="5"></th>
+          </tr>
+          <tr>
+            <th colspan="5">関東リーグ第6節</th>
+          </tr>
+          <tr>
+            <th colspan="5">味の素スタジアム西競技場</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th rowspan="2">
+              <h2>0</h2>
+            </th>
+            <th>0</th>
+            <th>-</th>
+            <th>0</th>
+            <th rowspan="2">
+              <h2>0</h2>
+            </th>
+          </tr>
+          <tr>
+            <th>0</th>
+            <th>-</th>
+            <th>0</th>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="col-4">
+      <h1>中央大学</h1>
+      <img src="https://shukyu.github.io/Dashboard/theme/images/teamlogo/中央大学.png" style="height:200px; width:200px" class="img-thumbnail" alt="Responsive image">
+    </div>
+  </div>
+  <!--試合情報ここまで-->
+  <!--簡単スタッツここから-->
+  <div class="justify-content-center text-center">
+    <h1>全体のスタッツ</h1>
+    <h2>チームスタッツ</h2>
+    <div class="row">
+      <div class="col-3"><img class="graph img-fluid" src="https://shukyu.github.io/Dashboard/theme/graphs/4sec_vsChuo/hbar_atk.png" /></div>
+      <div class="col-3"><img class="graph img-fluid" src="https://shukyu.github.io/Dashboard/theme/graphs/4sec_vsChuo/hbar_def.png" /></div>
+      <div class="col-3"><img class="graph img-fluid" src="https://shukyu.github.io/Dashboard/theme/graphs/4sec_vsChuo/hbar_foul.png" /></div>
+      <div class="col-3"><img class="graph img-fluid" src="https://shukyu.github.io/Dashboard/theme/graphs/4sec_vsChuo/hbar_set.png" /></div>
+    </div>
+    <h3>個人スタッツ</h3>
+    <div class="row text-center">
+      <div class="col-3"><img class="graph img-fluid" src="https://shukyu.github.io/Dashboard/theme/graphs/4sec_vsChuo/パス.png" /></div>
+      <div class="col-3"><img class="graph img-fluid" src="https://shukyu.github.io/Dashboard/theme/graphs/4sec_vsChuo/ドリブル.png" /></div>
+      <div class="col-3"><img class="graph img-fluid" src="https://shukyu.github.io/Dashboard/theme/graphs/4sec_vsChuo/枠内シュート.png" /></div>
+      <div class="col-3"><img class="graph img-fluid" src="https://shukyu.github.io/Dashboard/theme/graphs/4sec_vsChuo/枠外シュート.png" /></div>
+      <div class="col-3"><img class="graph img-fluid" src="https://shukyu.github.io/Dashboard/theme/graphs/4sec_vsChuo/クロス.png" /></div>
+      <div class="col-3"><img class="graph img-fluid" src="https://shukyu.github.io/Dashboard/theme/graphs/4sec_vsChuo/インターセプト.png" /></div>
+      <div class="col-3"><img class="graph img-fluid" src="https://shukyu.github.io/Dashboard/theme/graphs/4sec_vsChuo/カット.png" /></div>
+      <div class="col-3"><img class="graph img-fluid" src="https://shukyu.github.io/Dashboard/theme/graphs/4sec_vsChuo/クリア.png" /></div>
+      <div class="col-3"><img class="graph img-fluid" src="https://shukyu.github.io/Dashboard/theme/graphs/4sec_vsChuo/ブロック.png" /></div>
+      <div class="col-3"><img class="graph img-fluid" src="https://shukyu.github.io/Dashboard/theme/graphs/4sec_vsChuo/シュートブロック.png" /></div>
+    </div>
+  </div>
+
+  <!--簡単スタッツここから-->
+  <hr>
+  <!--ネットワークここから-->
+  <h2>ネットワーク分析</h2>
+  <h3>パスネットワーク</h3>
+  <div class="row justify-content-center">
+    <div class='col-12'>
+      <ul class="nav nav-tabs" id="passNetwork" role="tablist">
+        <li class="nav-item">
+          <a class="nav-link active" id="passNetwork-0-tab" data-toggle="tab" href="#passNetwork-0" role="tab"
+            aria-controls="home" aria-selected="true">交代前</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" id="passNetwork-1-tab" data-toggle="tab" href="#passNetwork-1" role="tab"
+            aria-controls="profile" aria-selected="false">交代１後</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" id="passNetwork-2-tab" data-toggle="tab" href="#passNetwork-2" role="tab"
+            aria-controls="contact" aria-selected="false">交代２後</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" id="passNetwork-0-tab" data-toggle="tab" href="#passNetwork-3" role="tab"
+            aria-controls="contact" aria-selected="false">交代３後</a>
+        </li>
+      </ul>
+      <div class="tab-content" id="passNetworkContent">
+        <div class="tab-pane fade show active" id="passNetwork-0" role="tabpanel" aria-labelledby="passNetwork-0-tab">
+          <img class="graph img-fluid" src="https://shukyu.github.io/Dashboard/theme/graphs/4sec_vsChuo/pitch.png" />
+        </div>
+        <div class="tab-pane fade" id="passNetwork-1" role="tabpanel" aria-labelledby="passNetwork-1-tab">
+          <img class="graph img-fluid" src="https://shukyu.github.io/Dashboard/theme/graphs/4sec_vsChuo/pitch.png" />
+        </div>
+        <div class="tab-pane fade" id="passNetwork-2" role="tabpanel" aria-labelledby="passNetwork-2-tab">
+          <img class="graph img-fluid" src="https://shukyu.github.io/Dashboard/theme/graphs/4sec_vsChuo/pitch.png" />
+        </div>
+        <div class="tab-pane fade" id="passNetwork-3" role="tabpanel" aria-labelledby="passNetwork-3-tab">
+          <img class="graph img-fluid" src="https://shukyu.github.io/Dashboard/theme/graphs/4sec_vsChuo/pitch.png" />
+        </div>
+      </div>
+    </div>
+  </div>
+  <h3>距離ネットワーク</h3>
+  <div class="row justify-content-center">
+    <div class='col-12'>
+      <ul class="nav nav-tabs" id="distNetwork" role="tablist">
+        <li class="nav-item">
+          <a class="nav-link active" id="distNetwork-0-tab" data-toggle="tab" href="#distNetwork-0" role="tab"
+            aria-controls="home" aria-selected="true">交代前</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" id="distNetwork-1-tab" data-toggle="tab" href="#distNetwork-1" role="tab"
+            aria-controls="profile" aria-selected="false">交代１後</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" id="distNetwork-2-tab" data-toggle="tab" href="#distNetwork-2" role="tab"
+            aria-controls="contact" aria-selected="false">交代２後</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" id="distNetwork-0-tab" data-toggle="tab" href="#distNetwork-3" role="tab"
+            aria-controls="contact" aria-selected="false">交代３後</a>
+        </li>
+      </ul>
+      <div class="tab-content" id="distNetworkContent">
+        <div class="tab-pane fade show active" id="distNetwork-0" role="tabpanel" aria-labelledby="distNetwork-0-tab">
+          <img class="graph img-fluid" src="https://shukyu.github.io/Dashboard/theme/graphs/4sec_vsChuo/pitch.png" />
+        </div>
+        <div class="tab-pane fade" id="distNetwork-1" role="tabpanel" aria-labelledby="distNetwork-1-tab">
+          <img class="graph img-fluid" src="https://shukyu.github.io/Dashboard/theme/graphs/4sec_vsChuo/pitch.png" />
+        </div>
+        <div class="tab-pane fade" id="distNetwork-2" role="tabpanel" aria-labelledby="distNetwork-2-tab">
+          <img class="graph img-fluid" src="https://shukyu.github.io/Dashboard/theme/graphs/4sec_vsChuo/pitch.png" />
+        </div>
+        <div class="tab-pane fade" id="distNetwork-3" role="tabpanel" aria-labelledby="distNetwork-3-tab">
+          <img class="graph img-fluid" src="https://shukyu.github.io/Dashboard/theme/graphs/4sec_vsChuo/pitch.png" />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr>
+
+  <div class="justify-content-center text-center">
+    <h2>攻撃の詳細</h2>
+    <div class='row'>
+      <div class="col-12">
+        <img class="graph img-fluid" src="https://shukyu.github.io/Dashboard/theme/graphs/4sec_vsChuo/pitchthird.png" />
+      </div>
+    </div>
+  </div>
+
+  <hr>
+  <div class="justify-content-center text-center">
+    <h2>守備の詳細</h2>
+    <h3></h3>
+    <h3></h3>
+  </div>
+
+</div>
+
+            </div>
+            <!-- Footer -->
+            <footer class="sticky-footer bg-white">
+                <div class="container my-auto">
+                    <div class="copyright text-center my-auto">
+                        <span>Copyright &copy; Your Website 2019</span>
+                    </div>
+                </div>
+            </footer>
+            <!-- End of Footer -->
+
+        </div>
+        <!-- End of Content Wrapper -->
+
+    </div>
+    <!-- End of Page Wrapper -->
+
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>
+
+
+    <!-- Open CV-->
+    <script src="https://shukyu.github.io/Dashboard/theme/js/opencv.js"></script>
+
+    <!-- My javascript-->
+    <script src="jhttps://shukyu.github.io/Dashboard/theme/js/myscripts.js"></script>
+
+
+    <!-- Core plugin JavaScript-->
+    <script src="https://shukyu.github.io/Dashboard/theme/js/jquery.easing.min.js"></script>
+
+    <!-- Custom scripts for all pages-->
+    <script src="https://shukyu.github.io/Dashboard/theme/js/sb-admin-2.min.js"></script>
+
+</body>
+
+</html>
