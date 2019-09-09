@@ -17,6 +17,7 @@ from yaml import Loader
 
 # Creates a dataframe with gps and event data.
 class MatchData:
+    """A simple function that says hello... Richie style"""
     def __init__(self, match_name):
         self.match_name = match_name
         self.gps_path = 'data/{0}/gps'.format(match_name)
@@ -94,7 +95,7 @@ class MatchData:
         return value
 
     def stats_hbar(self, meta=None, show=False):
-        '''
+        """
         Sample data to give to this is:
         meta = {
             'def':{
@@ -102,7 +103,7 @@ class MatchData:
                 '回数'   : [79, 60, 45,85],
             }
         }
-        '''
+        """
         # data generating function
         def f(l):
             counts = [int(self.get_count(attr)) for attr in l]
