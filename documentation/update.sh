@@ -1,1 +1,1 @@
-pydocmd simple generate+ > documentation/readme.md
+pydocmd simple generate++ > documentation/readme.md

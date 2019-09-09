@@ -17,7 +17,35 @@ from yaml import Loader
 
 # Creates a dataframe with gps and event data.
 class MatchData:
-    """A simple function that says hello... Richie style"""
+    """
+    The MatchData object can is meant to be used as an API to access a certain matches data.
+    ...
+
+    Attributes
+    ----------
+    match_name : str
+        match name
+    gps_path : str
+        path to gps data
+    event_path : str
+        path to event data
+    outpath : str
+        'docs/theme/graphs/'+match_name+'/'
+    yaml : dict
+        the content in the markdown file
+    gps_data : dict
+        raw gps data
+    event_data : dict
+        raw event data
+    data : tuple
+        (gps_data, event_data)
+    start : datetime.time
+        start time of gps
+    end : datetime.time
+        end time of gps
+
+    """
+
     def __init__(self, match_name):
         self.match_name = match_name
         self.gps_path = 'data/{0}/gps'.format(match_name)
@@ -31,12 +59,33 @@ class MatchData:
         self.data = self.generate_data()
 
     def init_yaml(self):
+        """Converts .md to yaml
+
+        Parameters
+        ----------
+        None
+
+        Raises
+        ------
+        None
+        """
         f = open("content/"+self.match_name+'.md',"r")
         text = f.read().split('---')[0]
         self.yaml = yaml.load(text, Loader=Loader)
 
 
     def get_gps_data(self):
+        """Converts .md to yaml
+
+        Parameters
+        ----------
+        None
+
+        Raises
+        ------
+        None
+        """
+
         path = self.gps_path
         start = dt.time.min
         end = dt.time.max
@@ -71,6 +120,17 @@ class MatchData:
         return d
 
     def get_event_data(self):
+        """Converts .md to yaml
+
+        Parameters
+        ----------
+        None
+
+        Raises
+        ------
+        None
+        """
+
         path = self.event_path
         flist = os.listdir(path)
         data = [pd.read_csv('{0}/{1}'.format(path, f), index_col=0) for f in os.listdir(path)]
@@ -82,6 +142,17 @@ class MatchData:
         return d
 
     def generate_data(self):
+        """Converts .md to yaml
+
+        Parameters
+        ----------
+        None
+
+        Raises
+        ------
+        None
+        """
+
         gps_data = self.gps_data
         event_data = self.event_data
         return gps_data, event_data
@@ -155,6 +226,17 @@ class MatchData:
                 plt.show()
 
     def rank_table(self, show=False):
+        """Converts .md to yaml
+
+        Parameters
+        ----------
+        None
+
+        Raises
+        ------
+        None
+        """
+
         h1 = self.event_data['h1'].reset_index()
         h2 = self.event_data['h2'].reset_index()
         d = pd.concat([h1,h2],sort=False)
@@ -179,6 +261,17 @@ class MatchData:
                     plt.show()
 
     def plot_pitch(self, height=68, width=105, xos=0, yofs=0):
+        """Converts .md to yaml
+
+        Parameters
+        ----------
+        None
+
+        Raises
+        ------
+        None
+        """
+
         hscaler = 68 / height
         wscaler = 105 / width
         # Create figure
@@ -272,6 +365,17 @@ class MatchData:
                          header_color='#40466e', row_colors=['#f1f1f2', 'w'], edge_color='w',
                          bbox=[0, 0, 1, 1], header_columns=0,
                          ax=None, **kwargs):
+        """Converts .md to yaml
+
+        Parameters
+        ----------
+        None
+
+        Raises
+        ------
+        None
+        """
+
         if ax is None:
             size = (np.array(data.shape[::-1]) + np.array([0, 1])) * np.array([col_width, row_height])
             fig, ax = plt.subplots(figsize=size)
