@@ -25,12 +25,16 @@ class MatchData:
     ----------
     match_name : str
         match name
+
     gps_path : str
         path to gps data
+
     event_path : str
         path to event data
+
     outpath : str
         'docs/theme/graphs/'+match_name+'/'
+
     yaml : dict
         the content in the markdown file
     gps_data : dict
@@ -55,7 +59,7 @@ class MatchData:
         pathlib.Path(self.outpath).mkdir(parents=True, exist_ok=True)
 
         self.gps_data = self.get_gps_data()
-        self.event_data = self.get_event_data()
+        self.event_data = self.get_event_data('full')
         self.data = self.generate_data()
 
     def init_yaml(self):
@@ -119,27 +123,51 @@ class MatchData:
         self.end = end
         return d
 
-    def get_event_data(self):
-        """Converts .md to yaml
+    def get_event_data(self, mode):
+        """Returns DataFrames of event data, Indexed by seconds
 
         Parameters
         ----------
-        None
+        - None
 
         Raises
         ------
-        None
+        - None
+
+        Returns
+        -------
+
+        - Dict
+            - "h1": data for 1st half
+            - "h2": data for 2nd half
+            - "full": concatenated h1 and h2
         """
 
         path = self.event_path
         flist = os.listdir(path)
-        data = [pd.read_csv('{0}/{1}'.format(path, f), index_col=0) for f in os.listdir(path)]
+        data = []
+        for f in os.listdir(path):
+            if f.endswith('.csv'):
+                data.append(pd.read_csv('{0}/{1}'.format(path, f), index_col=0))
 
         for i, d in enumerate(data):
             data[i].index = data[i].index.map(lambda x: dt.time(*time.strptime(x[4:12], '%M:%S:%f')[3:6]))
 
-        d = {'h1':data[0],'h2':data[1]}
-        return d
+        def f(t, offset=None):
+            seconds = (t.hour * 60 + t.minute) * 60 + t.second
+            if offset is not None:
+                seconds += offset
+            return seconds
+
+        df1 = pd.DataFrame(data[0])
+        df2 = pd.DataFrame(data[1])
+
+        df1.index = df1.index.map(lambda x: f(x))
+        df2.index = df2.index.map(lambda x: f(x,df1.index[-1]))
+        df =  df1.append(df2)
+
+        d = {'h1':df1,'h2':df2, 'full':df}
+        return d[mode]
 
     def generate_data(self):
         """Converts .md to yaml
@@ -401,6 +429,38 @@ class MatchData:
         for player, df in d.items():
             dic[player] = (df['X (m)'].mean(), df['Y (m)'].mean())
         return dic
+
+    def possession_time(self, start, end):
+        # ポゼッションに関するデータだけ取り出す
+        df = self.get_event_data('full')
+        s = df["default"]
+
+        ## default列にある種類のラベルをリストにする
+        value_list = s.unique().tolist()
+
+        ## 開始・終了とチーム名情報を取り出す
+        possession_series = s.replace([item for item in value_list if item not in ['ポゼッションスタート','ポゼッションエンド']], np.NaN)
+        teamname_series = s.replace([item for item in value_list if item not in ['筑波大学','相手チーム'] ])
+
+        possession_series.name = 'possession'
+        teamname_series.name = 'team'
+
+        possession_df = pd.concat((possession_series, teamname_series), axis=1).dropna()
+        possession_df = possession_df.loc[start:end]
+
+        out = []
+        for team in ['筑波大学', '相手チーム']:
+            _s = possession_df['team']
+            times = _s[_s==team].index.values
+
+            if len(times) % 2 == 0:
+                out.append(np.diff(times)[::2].sum())
+            else:
+                times = np.append(times, end)
+                out.append(np.diff(times)[::2].sum())
+
+        return out[0], out[1]
+
 
 def main():
     for match in os.listdir('data/'):

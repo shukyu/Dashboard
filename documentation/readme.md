@@ -12,12 +12,16 @@ Attributes
 ----------
 match_name : str
     match name
+
 gps_path : str
     path to gps data
+
 event_path : str
     path to event data
+
 outpath : str
     'docs/theme/graphs/'+match_name+'/'
+
 yaml : dict
     the content in the markdown file
 gps_data : dict
@@ -36,43 +40,57 @@ end : datetime.time
 ```python
 MatchData.init_yaml(self)
 ```
-Prints what the animals name is and what sound it makes.
-
-If the argument `sound` isn't passed in, the default Animal
-sound is used.
+Converts .md to yaml
 
 Parameters
 ----------
-sound : str, optional
-    The sound the animal makes (default is None)
+None
 
 Raises
 ------
-NotImplementedError
-    If no sound is set for the animal or passed in as a
-    parameter.
+None
 
 ### get_gps_data
 ```python
 MatchData.get_gps_data(self)
 ```
-Spreadsheet Column Printer
+Converts .md to yaml
 
-This script allows the user to print to the console all columns in the
-spreadsheet. It is assumed that the first row of the spreadsheet is the
-location of the columns.
+Parameters
+----------
+None
 
-This tool accepts comma separated value files (.csv) as well as excel
-(.xls, .xlsx) files.
+Raises
+------
+None
 
-This script requires that `pandas` be installed within the Python
-environment you are running this script in.
+### get_event_data
+```python
+MatchData.get_event_data(self)
+```
+Converts .md to yaml
 
-This file can also be imported as a module and contains the following
-functions:
+Parameters
+----------
+None
 
-    * get_spreadsheet_cols - returns the column headers of the file
-    * main - the main function of the script
+Raises
+------
+None
+
+### generate_data
+```python
+MatchData.generate_data(self)
+```
+Converts .md to yaml
+
+Parameters
+----------
+None
+
+Raises
+------
+None
 
 ### stats_hbar
 ```python
@@ -86,4 +104,46 @@ meta = {
         '回数'   : [79, 60, 45,85],
     }
 }
+
+### rank_table
+```python
+MatchData.rank_table(self, show=False)
+```
+Converts .md to yaml
+
+Parameters
+----------
+None
+
+Raises
+------
+None
+
+### plot_pitch
+```python
+MatchData.plot_pitch(self, height=68, width=105, xos=0, yofs=0)
+```
+Converts .md to yaml
+
+Parameters
+----------
+None
+
+Raises
+------
+None
+
+### render_mpl_table
+```python
+MatchData.render_mpl_table(self, data, col_width=3.0, row_height=0.625, font_size=14, header_color='#40466e', row_colors=['#f1f1f2', 'w'], edge_color='w', bbox=[0, 0, 1, 1], header_columns=0, ax=None, **kwargs)
+```
+Converts .md to yaml
+
+Parameters
+----------
+None
+
+Raises
+------
+None
 
