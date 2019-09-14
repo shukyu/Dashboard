@@ -9,7 +9,7 @@ tkb_total: 0
 opp_first: 0
 opp_second: 0
 opp_total: 0
-slug: 4sec_vsChuo
+slug: 6sec_vsChuo
 p1: 35.716871, 139.568466
 p2: 35.717128, 139.567786
 p3: 35.717730, 139.568953
