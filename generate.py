@@ -485,7 +485,7 @@ class MatchData:
         for xpos, ypos, yval in zip(x, y1, y2):
             plt.text(xpos, ypos+yval/2, "%.1f"%yval, ha="center", va="center",fontsize =20,color="white")
         plt.ylim(0,110)
-        plt.title("Possession vs Toyo(%)")
+        plt.title("Possession vs Opponent(%)")
         plt.legend(bbox_to_anchor=(1.01,0.5), loc='center left')
         plt.savefig("{0}/{1}.png".format(self.outpath, 'possesion_graph'))
         plt.close()

@@ -1,5 +1,5 @@
 Title: 関東リーグ第7節vs流通経済大学
-date: 2019-06-01
+date: 2019-05-29
 location: 柏の葉総合競技場
 game: 関東リーグ第7節
 opponent: 流通経済大学
