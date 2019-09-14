@@ -12,6 +12,7 @@ import pandas as pd
 import seaborn as sns
 import datetime as dt
 import matplotlib.pyplot as plt
+from matplotlib.patches import Arc
 
 from yaml import Loader
 
@@ -114,9 +115,11 @@ class MatchData:
                                   usecols=[
                                       'Time',
                                       'Speed (km/h)',
-                                      'X (m)',
-                                      'Y (m)',
-                                      'Acceleration (m/s/s)'
+                                      'Latitude',
+                                      'Longitude',
+                                      'Acceleration (m/s/s)',
+                                      'Distance (m)',
+                                      'Bodyload'
                                   ])
                 d[player_name] = _df
         self.start = start
@@ -187,7 +190,7 @@ class MatchData:
 
     def get_count(self, attr):
         try:
-            d = pd.concat((self.event_data['h1'],self.event_data['h2']), sort=False)
+            d = pd.concat((self.event_data('h1'),self.event_data('h2')), sort=False)
             value = d.apply(pd.value_counts,axis=0).apply(lambda x: x.max(), axis=1)[attr]
         except:
             value = 0
@@ -249,7 +252,7 @@ class MatchData:
             sns.despine(left=True, bottom=True)
             if show!=True:
                 plt.savefig("{0}hbar_{1}.png".format(self.outpath, chart_name), transparent=True,bbox_inches='tight')
-                plt.cla()
+                plt.close()
             else:
                 plt.show()
 
@@ -265,9 +268,7 @@ class MatchData:
         None
         """
 
-        h1 = self.event_data['h1'].reset_index()
-        h2 = self.event_data['h2'].reset_index()
-        d = pd.concat([h1,h2],sort=False)
+        d = self.get_event_data('full')
         cdict = {
             '攻撃':'crimson',
             '守備':'#40466e',
@@ -284,7 +285,7 @@ class MatchData:
                 plt.title(name)
                 if show!=True:
                     plt.savefig("{0}/{1}.png".format(self.outpath, name), transparent=True,bbox_inches='tight')
-                    plt.cla()
+                    plt.close()
                 else:
                     plt.show()
 
@@ -461,6 +462,34 @@ class MatchData:
 
         return out[0], out[1]
 
+    def possession_graph(self, times=[(0,15),(15,30),(30,45),(45,60),(60,75),(75,90)]):
+        y1 = []
+        y2 = []
+        x = []
+        for start, end in times:
+            _y1, _y2 = self.possession_time(start*60, end*60)
+            total = _y1+_y2
+            y1.append(_y1/total*100)
+            y2.append(_y2/total*100)
+            x.append("{0}~{1}".format(start,end))
+
+        plt.figure(figsize=(10,5))
+        # stack bars
+        plt.bar(x, y1, label="Tsukuba", color = "blue")
+        plt.bar(x, y2 ,bottom=y1,label= "Opponent",color ="red")
+
+
+        # add text annotation corresponding to the percentage of each data.
+        for xpos, ypos, yval in zip(x, y1, y1):
+            plt.text(xpos, ypos/2, "%.1f"%yval, ha="center", va="center",fontsize =20,color="white")
+        for xpos, ypos, yval in zip(x, y1, y2):
+            plt.text(xpos, ypos+yval/2, "%.1f"%yval, ha="center", va="center",fontsize =20,color="white")
+        plt.ylim(0,110)
+        plt.title("Possession vs Toyo(%)")
+        plt.legend(bbox_to_anchor=(1.01,0.5), loc='center left')
+        plt.savefig("{0}/{1}.png".format(self.outpath, 'possesion_graph'))
+        plt.close()
+
 
 def main():
     for match in os.listdir('data/'):
@@ -470,3 +499,4 @@ def main():
         match_data = MatchData(match)
         match_data.stats_hbar()
         match_data.rank_table()
+        match_data.possession_graph()
