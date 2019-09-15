@@ -190,9 +190,10 @@ class MatchData:
 
     def get_count(self, attr):
         try:
-            d = pd.concat((self.event_data('h1'),self.event_data('h2')), sort=False)
+            d = self.event_data
             value = d.apply(pd.value_counts,axis=0).apply(lambda x: x.max(), axis=1)[attr]
-        except:
+        except Exception as e:
+            print(e)
             value = 0
         return value
 
@@ -217,8 +218,8 @@ class MatchData:
             return dic
         if meta==None:
             meta = {
-                'atk':f(['パス', '枠内シュート', 'ドリブル', 'クロス', '枠外シュート']),
-                'def':f(['シュートブロック', 'クリア', 'インターセプト', 'ブロック']),
+                'atk':f(['パス', '枠内シュート','枠外シュート', 'ドリブル', 'クロス']),
+                'def':f(['被枠外シュート','被枠内シュート','シュートブロック', 'クリア', 'インターセプト', 'ブロック']),
                 'set':f(['スローイン', 'CK', 'FK', 'PK']),
                 'foul':f(['ファール', 'オフサイド']),
             }
@@ -478,7 +479,6 @@ class MatchData:
         plt.bar(x, y1, label="Tsukuba", color = "blue")
         plt.bar(x, y2 ,bottom=y1,label= "Opponent",color ="red")
 
-
         # add text annotation corresponding to the percentage of each data.
         for xpos, ypos, yval in zip(x, y1, y1):
             plt.text(xpos, ypos/2, "%.1f"%yval, ha="center", va="center",fontsize =20,color="white")
@@ -487,7 +487,7 @@ class MatchData:
         plt.ylim(0,110)
         plt.title("Possession vs Opponent(%)")
         plt.legend(bbox_to_anchor=(1.01,0.5), loc='center left')
-        plt.savefig("{0}/{1}.png".format(self.outpath, 'possesion_graph'))
+        plt.savefig("{0}/{1}.png".format(self.outpath, 'possession_graph') ,bbox_inches='tight', pad_inches=0)
         plt.close()
 
 
