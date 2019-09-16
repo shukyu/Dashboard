@@ -12,12 +12,45 @@ import pandas as pd
 import seaborn as sns
 import datetime as dt
 import matplotlib.pyplot as plt
+from matplotlib.patches import Arc
 
 from yaml import Loader
 
 # Creates a dataframe with gps and event data.
 class MatchData:
-    """A simple function that says hello... Richie style"""
+    """
+    The MatchData object can is meant to be used as an API to access a certain matches data.
+    ...
+
+    Attributes
+    ----------
+    match_name : str
+        match name
+
+    gps_path : str
+        path to gps data
+
+    event_path : str
+        path to event data
+
+    outpath : str
+        'docs/theme/graphs/'+match_name+'/'
+
+    yaml : dict
+        the content in the markdown file
+    gps_data : dict
+        raw gps data
+    event_data : dict
+        raw event data
+    data : tuple
+        (gps_data, event_data)
+    start : datetime.time
+        start time of gps
+    end : datetime.time
+        end time of gps
+
+    """
+
     def __init__(self, match_name):
         self.match_name = match_name
         self.gps_path = 'data/{0}/gps'.format(match_name)
@@ -27,16 +60,37 @@ class MatchData:
         pathlib.Path(self.outpath).mkdir(parents=True, exist_ok=True)
 
         self.gps_data = self.get_gps_data()
-        self.event_data = self.get_event_data()
+        self.event_data = self.get_event_data('full')
         self.data = self.generate_data()
 
     def init_yaml(self):
+        """Converts .md to yaml
+
+        Parameters
+        ----------
+        None
+
+        Raises
+        ------
+        None
+        """
         f = open("content/"+self.match_name+'.md',"r")
         text = f.read().split('---')[0]
         self.yaml = yaml.load(text, Loader=Loader)
 
 
     def get_gps_data(self):
+        """Converts .md to yaml
+
+        Parameters
+        ----------
+        None
+
+        Raises
+        ------
+        None
+        """
+
         path = self.gps_path
         start = dt.time.min
         end = dt.time.max
@@ -61,36 +115,85 @@ class MatchData:
                                   usecols=[
                                       'Time',
                                       'Speed (km/h)',
-                                      'X (m)',
-                                      'Y (m)',
-                                      'Acceleration (m/s/s)'
+                                      'Latitude',
+                                      'Longitude',
+                                      'Acceleration (m/s/s)',
+                                      'Distance (m)',
+                                      'Bodyload'
                                   ])
                 d[player_name] = _df
         self.start = start
         self.end = end
         return d
 
-    def get_event_data(self):
+    def get_event_data(self, mode):
+        """Returns DataFrames of event data, Indexed by seconds
+
+        Parameters
+        ----------
+        - None
+
+        Raises
+        ------
+        - None
+
+        Returns
+        -------
+
+        - Dict
+            - "h1": data for 1st half
+            - "h2": data for 2nd half
+            - "full": concatenated h1 and h2
+        """
+
         path = self.event_path
         flist = os.listdir(path)
-        data = [pd.read_csv('{0}/{1}'.format(path, f), index_col=0) for f in os.listdir(path)]
+        data = []
+        for f in os.listdir(path):
+            if f.endswith('.csv'):
+                data.append(pd.read_csv('{0}/{1}'.format(path, f), index_col=0))
 
         for i, d in enumerate(data):
             data[i].index = data[i].index.map(lambda x: dt.time(*time.strptime(x[4:12], '%M:%S:%f')[3:6]))
 
-        d = {'h1':data[0],'h2':data[1]}
-        return d
+        def f(t, offset=None):
+            seconds = (t.hour * 60 + t.minute) * 60 + t.second
+            if offset is not None:
+                seconds += offset
+            return seconds
+
+        df1 = pd.DataFrame(data[0])
+        df2 = pd.DataFrame(data[1])
+
+        df1.index = df1.index.map(lambda x: f(x))
+        df2.index = df2.index.map(lambda x: f(x,df1.index[-1]))
+        df =  df1.append(df2)
+
+        d = {'h1':df1,'h2':df2, 'full':df}
+        return d[mode]
 
     def generate_data(self):
+        """Converts .md to yaml
+
+        Parameters
+        ----------
+        None
+
+        Raises
+        ------
+        None
+        """
+
         gps_data = self.gps_data
         event_data = self.event_data
         return gps_data, event_data
 
     def get_count(self, attr):
         try:
-            d = pd.concat((self.event_data['h1'],self.event_data['h2']), sort=False)
+            d = self.event_data
             value = d.apply(pd.value_counts,axis=0).apply(lambda x: x.max(), axis=1)[attr]
-        except:
+        except Exception as e:
+            print(e)
             value = 0
         return value
 
@@ -115,8 +218,8 @@ class MatchData:
             return dic
         if meta==None:
             meta = {
-                'atk':f(['パス', '枠内シュート', 'ドリブル', 'クロス', '枠外シュート']),
-                'def':f(['シュートブロック', 'クリア', 'インターセプト', 'ブロック']),
+                'atk':f(['パス', '枠内シュート','枠外シュート', 'ドリブル', 'クロス']),
+                'def':f(['被枠外シュート','被枠内シュート','シュートブロック', 'クリア', 'インターセプト', 'ブロック']),
                 'set':f(['スローイン', 'CK', 'FK', 'PK']),
                 'foul':f(['ファール', 'オフサイド']),
             }
@@ -150,14 +253,23 @@ class MatchData:
             sns.despine(left=True, bottom=True)
             if show!=True:
                 plt.savefig("{0}hbar_{1}.png".format(self.outpath, chart_name), transparent=True,bbox_inches='tight')
-                plt.cla()
+                plt.close()
             else:
                 plt.show()
 
     def rank_table(self, show=False):
-        h1 = self.event_data['h1'].reset_index()
-        h2 = self.event_data['h2'].reset_index()
-        d = pd.concat([h1,h2],sort=False)
+        """Converts .md to yaml
+
+        Parameters
+        ----------
+        None
+
+        Raises
+        ------
+        None
+        """
+
+        d = self.get_event_data('full')
         cdict = {
             '攻撃':'crimson',
             '守備':'#40466e',
@@ -174,11 +286,22 @@ class MatchData:
                 plt.title(name)
                 if show!=True:
                     plt.savefig("{0}/{1}.png".format(self.outpath, name), transparent=True,bbox_inches='tight')
-                    plt.cla()
+                    plt.close()
                 else:
                     plt.show()
 
     def plot_pitch(self, height=68, width=105, xos=0, yofs=0):
+        """Converts .md to yaml
+
+        Parameters
+        ----------
+        None
+
+        Raises
+        ------
+        None
+        """
+
         hscaler = 68 / height
         wscaler = 105 / width
         # Create figure
@@ -272,6 +395,17 @@ class MatchData:
                          header_color='#40466e', row_colors=['#f1f1f2', 'w'], edge_color='w',
                          bbox=[0, 0, 1, 1], header_columns=0,
                          ax=None, **kwargs):
+        """Converts .md to yaml
+
+        Parameters
+        ----------
+        None
+
+        Raises
+        ------
+        None
+        """
+
         if ax is None:
             size = (np.array(data.shape[::-1]) + np.array([0, 1])) * np.array([col_width, row_height])
             fig, ax = plt.subplots(figsize=size)
@@ -298,6 +432,65 @@ class MatchData:
             dic[player] = (df['X (m)'].mean(), df['Y (m)'].mean())
         return dic
 
+    def possession_time(self, start, end):
+        # ポゼッションに関するデータだけ取り出す
+        df = self.get_event_data('full')
+        s = df["default"]
+
+        ## default列にある種類のラベルをリストにする
+        value_list = s.unique().tolist()
+
+        ## 開始・終了とチーム名情報を取り出す
+        possession_series = s.replace([item for item in value_list if item not in ['ポゼッションスタート','ポゼッションエンド']], np.NaN)
+        teamname_series = s.replace([item for item in value_list if item not in ['筑波大学','相手チーム'] ])
+
+        possession_series.name = 'possession'
+        teamname_series.name = 'team'
+
+        possession_df = pd.concat((possession_series, teamname_series), axis=1).dropna()
+        possession_df = possession_df.loc[start:end]
+
+        out = []
+        for team in ['筑波大学', '相手チーム']:
+            _s = possession_df['team']
+            times = _s[_s==team].index.values
+
+            if len(times) % 2 == 0:
+                out.append(np.diff(times)[::2].sum())
+            else:
+                times = np.append(times, end)
+                out.append(np.diff(times)[::2].sum())
+
+        return out[0], out[1]
+
+    def possession_graph(self, times=[(0,90),(0,45),(45,90),(0,15),(15,30),(30,45),(45,60),(60,75),(75,90)]):
+        y1 = []
+        y2 = []
+        x = []
+        for start, end in times:
+            _y1, _y2 = self.possession_time(start*60, end*60)
+            total = _y1+_y2
+            y1.append(_y1/total*100)
+            y2.append(_y2/total*100)
+            x.append("{0}~{1}".format(start,end))
+
+        plt.figure(figsize=(10,5))
+        # stack bars
+        plt.bar(x, y1, label="Tsukuba", color = "blue")
+        plt.bar(x, y2 ,bottom=y1,label= "Opponent",color ="red")
+
+        # add text annotation corresponding to the percentage of each data.
+        for xpos, ypos, yval in zip(x, y1, y1):
+            plt.text(xpos, ypos/2, "%.1f"%yval, ha="center", va="center",fontsize =20,color="white")
+        for xpos, ypos, yval in zip(x, y1, y2):
+            plt.text(xpos, ypos+yval/2, "%.1f"%yval, ha="center", va="center",fontsize =20,color="white")
+        plt.ylim(0,110)
+        plt.title("Possession vs Opponent(%)")
+        plt.legend(bbox_to_anchor=(1.01,0.5), loc='center left')
+        plt.savefig("{0}/{1}.png".format(self.outpath, 'possession_graph') ,bbox_inches='tight', pad_inches=0)
+        plt.close()
+
+
 def main():
     for match in os.listdir('data/'):
         if match[0] == ".":
@@ -306,3 +499,4 @@ def main():
         match_data = MatchData(match)
         match_data.stats_hbar()
         match_data.rank_table()
+        match_data.possession_graph()
