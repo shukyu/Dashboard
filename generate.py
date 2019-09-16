@@ -463,7 +463,7 @@ class MatchData:
 
         return out[0], out[1]
 
-    def possession_graph(self, times=[(0,15),(15,30),(30,45),(45,60),(60,75),(75,90)]):
+    def possession_graph(self, times=[(0,90),(0,45),(45,90),(0,15),(15,30),(30,45),(45,60),(60,75),(75,90)]):
         y1 = []
         y2 = []
         x = []
