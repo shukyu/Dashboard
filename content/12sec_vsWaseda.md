@@ -3,6 +3,7 @@ date: 2019-09-16
 location: 筑波大学第一サッカー場
 game: 関東リーグ第12節
 opponent: 早稲田大学
+opp_name: Waseda
 tkb_first: 1
 tkb_second: 4
 tkb_total: 5

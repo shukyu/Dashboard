@@ -3,6 +3,7 @@ date: 2019-05-18
 location: 味の素スタジアム西競技場
 game: 関東リーグ第6節
 opponent: 中央大学
+opp_name: Chuo
 tkb_first: 0
 tkb_second: 0
 tkb_total: 0

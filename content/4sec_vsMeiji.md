@@ -3,6 +3,7 @@ date: 2019-05-02
 location: 柏の葉競技場
 game: 関東リーグ第4節
 opponent: 明治大学
+opp_name: Meiji
 tkb_first: 2
 tkb_second: 0
 tkb_total: 2

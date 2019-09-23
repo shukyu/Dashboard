@@ -242,7 +242,7 @@ class MatchData:
             i=0
             text_left = text_left/20
             for event, kaisu in zip(chart_data['events'],chart_data['回数']):
-                ax.text(text_left,i-0.15, event, fontsize=35, color='white')
+                ax.text(text_left,i-0.15, event, fontsize=25, color='white')
                 ax.text(text_left,i+0.15, '{0}'.format(kaisu), fontsize=35, color='red')
                 i+=1
 

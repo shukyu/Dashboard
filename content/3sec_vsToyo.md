@@ -3,6 +3,7 @@ date: 2019-04-27
 location: 味の素スタジアム西競技場
 game: 関東リーグ第3節
 opponent: 東洋大学
+opp_name: Toyo
 tkb_first: 0
 tkb_second: 1
 tkb_total: 1

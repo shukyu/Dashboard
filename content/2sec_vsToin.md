@@ -3,6 +3,7 @@ date: 2019-04-17
 location: 味の素フィールドに西が丘
 game: 関東リーグ第2節
 opponent: 桐蔭横浜大学
+opp_name: Toin
 tkb_first: 0
 tkb_second: 2
 tkb_total: 2

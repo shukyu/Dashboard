@@ -3,6 +3,7 @@ date: 2019-08-11
 location: 味の素フィールド西が丘
 game: 関東リーグ第11節
 opponent: 早稲田大学
+opp_name: Waseda
 tkb_first: 0
 tkb_second: 1
 tkb_total: 1

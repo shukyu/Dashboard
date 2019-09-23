@@ -3,6 +3,7 @@ date: 2019-05-29
 location: 柏の葉総合競技場
 game: 関東リーグ第7節
 opponent: 流通経済大学
+opp_name: RKU
 tkb_first: 0
 tkb_second: 1
 tkb_total: 1
