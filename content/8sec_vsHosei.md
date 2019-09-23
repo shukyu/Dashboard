@@ -3,6 +3,7 @@ date: 2019-06-01
 location: 武蔵野市立武蔵野陸上競技場
 game: 関東リーグ第8節
 opponent: 法政大学
+opp_name: Hosei
 tkb_first: 0
 tkb_second: 0
 tkb_total: 0

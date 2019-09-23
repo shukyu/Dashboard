@@ -2,7 +2,8 @@ Title: 関東リーグ第9節vs専修大学
 date: 2019-08-04
 location: 筑波大学第一サッカー場
 game: 関東リーグ第9節
-opponent: 専修大学大学
+opponent: 専修大学
+opp_name: Senshu
 tkb_first: 1
 tkb_second: 2
 tkb_total: 3

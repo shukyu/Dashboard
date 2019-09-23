@@ -3,6 +3,7 @@ date: 2019-05-06
 location: 柏の葉公園競技場
 game: 関東リーグ第5節
 opponent: 順天堂大学
+opp_name: Junten
 tkb_first: 0
 tkb_second: 1
 tkb_total: 1
@@ -20,5 +21,3 @@ Password: tsukubashukyu
 
 ---
 no content
-
-

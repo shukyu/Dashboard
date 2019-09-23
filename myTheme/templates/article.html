@@ -46,7 +46,7 @@
     </div>
     <div class="col-4">
       <h1>{{ article.opponent}}</h1>
-      <img src="{{ SITEURL }}/theme/images/teamlogo/{{ article.opponent }}.png" style="height:200px; width:200px" class="img-thumbnail" alt="Responsive image">
+      <img src="{{ SITEURL }}/theme/images/teamlogo/{{ article.opp_name }}.png" style="height:200px; width:200px" class="img-thumbnail" alt="Responsive image">
     </div>
   </div>
   <!--試合情報ここまで-->
@@ -62,7 +62,6 @@
     </div>
     <h3>個人スタッツ</h3>
     <div class="row text-center">
-      <div class="col-3"><img class="graph img-fluid" src="{{ SITEURL }}/theme/graphs/{{ article.slug }}/パス.png" /></div>
       <div class="col-3"><img class="graph img-fluid" src="{{ SITEURL }}/theme/graphs/{{ article.slug }}/ドリブル.png" /></div>
       <div class="col-3"><img class="graph img-fluid" src="{{ SITEURL }}/theme/graphs/{{ article.slug }}/枠内シュート.png" /></div>
       <div class="col-3"><img class="graph img-fluid" src="{{ SITEURL }}/theme/graphs/{{ article.slug }}/枠外シュート.png" /></div>

@@ -218,7 +218,7 @@ class MatchData:
             return dic
         if meta==None:
             meta = {
-                'atk':f(['パス', '枠内シュート','枠外シュート', 'ドリブル', 'クロス']),
+                'atk':f(['枠内シュート','枠外シュート', 'ドリブル', 'クロス']),
                 'def':f(['被枠外シュート','被枠内シュート','シュートブロック', 'クリア', 'インターセプト', 'ブロック']),
                 'set':f(['スローイン', 'CK', 'FK', 'PK']),
                 'foul':f(['ファール', 'オフサイド']),
@@ -234,7 +234,7 @@ class MatchData:
                 if attr_name == 'events':
                     continue
                 else:
-                    sns.set_color_codes(color[i])
+                    # sns.set_color_codes(color[i])
                     sns.barplot(x=attr_name, y="events", data=chart_data, label=attr_name, color="b")
                     text_left = max(text_left, max(attr_data))
                     i+=1
@@ -242,8 +242,8 @@ class MatchData:
             i=0
             text_left = text_left/20
             for event, kaisu in zip(chart_data['events'],chart_data['回数']):
-                ax.text(text_left,i-0.15, event, fontsize=35, color='white')
-                ax.text(text_left,i+0.15, '{0}'.format(kaisu), fontsize=35, color='red')
+                ax.text(text_left,i-0.15, event, fontsize=25, color='white')
+                ax.text(text_left,i+0.15, '{0}'.format(kaisu), fontsize=25, color='red')
                 i+=1
 
             # Add a legend and informative axis label
