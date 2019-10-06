@@ -162,8 +162,9 @@ class MatchData:
                 seconds += offset
             return seconds
 
-        df1 = pd.DataFrame(data[0])
-        df2 = pd.DataFrame(data[1])
+        df1 = pd.DataFrame(data[1])#データが前後半逆転していたので、データをひっくり返した
+        df2 = pd.DataFrame(data[0])
+        
 
         df1.index = df1.index.map(lambda x: f(x))
         df2.index = df2.index.map(lambda x: f(x,df1.index[-1]))
@@ -218,7 +219,7 @@ class MatchData:
             return dic
         if meta==None:
             meta = {
-                'atk':f(['パス', '枠内シュート','枠外シュート', 'ドリブル', 'クロス']),
+                'atk':f(['枠内シュート','枠外シュート', 'ドリブル', 'クロス']),
                 'def':f(['被枠外シュート','被枠内シュート','シュートブロック', 'クリア', 'インターセプト', 'ブロック']),
                 'set':f(['スローイン', 'CK', 'FK', 'PK']),
                 'foul':f(['ファール', 'オフサイド']),
@@ -234,7 +235,7 @@ class MatchData:
                 if attr_name == 'events':
                     continue
                 else:
-                    sns.set_color_codes(color[i])
+                    # sns.set_color_codes(color[i])
                     sns.barplot(x=attr_name, y="events", data=chart_data, label=attr_name, color="b")
                     text_left = max(text_left, max(attr_data))
                     i+=1
@@ -243,7 +244,7 @@ class MatchData:
             text_left = text_left/20
             for event, kaisu in zip(chart_data['events'],chart_data['回数']):
                 ax.text(text_left,i-0.15, event, fontsize=25, color='white')
-                ax.text(text_left,i+0.15, '{0}'.format(kaisu), fontsize=35, color='red')
+                ax.text(text_left,i+0.15, '{0}'.format(kaisu), fontsize=25, color='red')
                 i+=1
 
             # Add a legend and informative axis label
@@ -434,21 +435,46 @@ class MatchData:
 
     def possession_time(self, start, end):
         # ポゼッションに関するデータだけ取り出す
+        #ポゼッションに関するDataFrame作成する際、「相手チーム」というタグに、ポゼッション以外のタグが紐付いてるため、その行を削除する
         df = self.get_event_data('full')
-        s = df["default"]
-
+        
+        data1 = []
+        index1= []
+        for index, row in df.iterrows():
+            if row.isnull().sum() == 6 :#一行につき、default以外の列のNaNの個数をカウントすることで条件分岐（6未満だと、必ずNaNでない列が存在する→ポゼッション以外のタグが紐付いてる）
+                lists = row.values.tolist()#Seriesを一度リスト化
+                index1.append(index)#「時間」列の取得
+                data1.append(lists)
+        df1 = pd.DataFrame(data1)#DataFrameに変換（このままだと、indexが「時間」になってない）
+        df1.index = index1 #時間  
+       
+        s = df1[0]#default列を抽出
+      
         ## default列にある種類のラベルをリストにする
         value_list = s.unique().tolist()
-
         ## 開始・終了とチーム名情報を取り出す
-        possession_series = s.replace([item for item in value_list if item not in ['ポゼッションスタート','ポゼッションエンド']], np.NaN)
-        teamname_series = s.replace([item for item in value_list if item not in ['筑波大学','相手チーム'] ])
-
-        possession_series.name = 'possession'
-        teamname_series.name = 'team'
-
-        possession_df = pd.concat((possession_series, teamname_series), axis=1).dropna()
-        possession_df = possession_df.loc[start:end]
+        possession_series = pd.DataFrame(s.replace([item for item in value_list if item not in ['ポゼッションスタート','ポゼッションエンド']],np.nan).dropna())
+        teamname_series =  pd.DataFrame(s.replace([item for item in value_list if item not in ['筑波大学','相手チーム'] ],np.nan).dropna())
+        possession_series.columns = ['possession']
+        teamname_series.columns = ['team']
+        possession_df = possession_series.join(teamname_series).dropna()
+        possession_df = possession_df.loc[start:end]     
+        
+#         def validation(frame,i):#ポゼッションスタートとエンドがひっくり返っていないかどうかの検証
+#             frame = frame.reset_index(drop=True)
+#             return frame["possession"].loc[2*i-1]=="ポゼッションエンド"
+#         for i in range(1,int(len(possession_df)/2)):
+#             assert validation(possession_df,i), 'ポゼッションスタートとポゼッションエンドが逆転してる'
+#         def getNearestValue(list, num):
+#             """
+#             概要: リストからある値に最も近い値を返却する関数
+#             @param list: データ配列
+#             @param num: 対象値
+#             @return 対象値に最も近い値
+#             """
+#             # リスト要素と対象値の差分を計算し最小値のインデックスを取得
+#             idx = np.abs(np.asarray(list) - num).argmin()
+#             return list[idx]   
 
         out = []
         for team in ['筑波大学', '相手チーム']:
@@ -456,13 +482,36 @@ class MatchData:
             times = _s[_s==team].index.values
 
             if len(times) % 2 == 0:
-                out.append(np.diff(times)[::2].sum())
-            else:
                 times = np.append(times, end)
                 out.append(np.diff(times)[::2].sum())
+            else:
+                out.append(np.diff(times)[::2].sum())
 
-        return out[0], out[1]
+        return out[0], out[1]                    
+#         out = []
+#         for team in ['筑波大学', '相手チーム']:
+#             _s = possession_df['team']
+#             times = _s[_s==team].index.values
+#             #DataFrameの最後が"ポゼッションスタート"で終わってる場合、endの時間を末尾にappendする
+#             if (possession_df["possession"][getNearestValue(times,end)] is "ポゼッションスタート") & (possession_df["possession"][getNearestValue(times,start)] is "ポゼッションエンド"):
+#                 times = np.append(times, end)
+#                 times = np.insert(times,0,start)
+#                 out.append(np.diff(times)[::2].sum())
+                
+#             elif ((possession_df["possession"][getNearestValue(times,end)] is "ポゼッションスタート") & (possession_df["possession"][getNearestValue(times,start)] is "ポゼッションスタート")):
+#                 times = np.append(times, end)
+#                 out.append(np.diff(times)[::2].sum())
+                
+#             elif ((possession_df["possession"][getNearestValue(times,end)] is "ポゼッションエンド") & (possession_df["possession"][getNearestValue(times,start)] is "ポゼッションエンド")):
+#                 times = np.insert(times,0,start)
+#                 out.append(np.diff(times)[::2].sum())
+#             else:
+#                 out.append(np.diff(times)[::2].sum())
+           
+#         return out[0], out[1]
+    
 
+    
     def possession_graph(self, times=[(0,90),(0,45),(45,90),(0,15),(15,30),(30,45),(45,60),(60,75),(75,90)]):
         y1 = []
         y2 = []
@@ -487,6 +536,7 @@ class MatchData:
         plt.ylim(0,110)
         plt.title("Possession vs Opponent(%)")
         plt.legend(bbox_to_anchor=(1.01,0.5), loc='center left')
+        plt.show()
         plt.savefig("{0}/{1}.png".format(self.outpath, 'possession_graph') ,bbox_inches='tight', pad_inches=0)
         plt.close()
 
