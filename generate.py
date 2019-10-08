@@ -157,7 +157,7 @@ class MatchData:
             data[i].index = data[i].index.map(lambda x: dt.time(*time.strptime(x[4:12], '%M:%S:%f')[3:6]))
 
         def f(t, offset=None):
-            seconds = (t.hour * 60 + t.minute) * 60 + t.second
+            seconds = (t.hour * 60 + t.minute) * 60 + t.second + t.microsecond
             if offset is not None:
                 seconds += offset
             return seconds
