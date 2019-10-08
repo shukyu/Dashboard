@@ -44,19 +44,22 @@ class MatchData:
         raw event data
     data : tuple
         (gps_data, event_data)
-    start : datetime.time
-        start time of gps
+    start : datetime.timeself.outpath = 'docs/theme/graphs/'+match_name+'/'self.outpath = 'docs/theme/graphs/'+matcself.outpath = 'docs/theme/graphs/'+matcself.outpath = 'docs/theme/graphs/'+match_name+'/'h_name+'/'h_name+'/'
+        start time of gpsself.outpath = 'docs/theme/graphs/'+matchself.outpath = 'docs/theme/graphs/'+match_name+'/'_name+'/'
     end : datetime.time
         end time of gps
 
     """
 
-    def __init__(self, match_name):
+    def __init__(self, match_name, test_mode=False):
         self.match_name = match_name
         self.gps_path = 'data/{0}/gps'.format(match_name)
         self.event_path = 'data/{0}/splyza'.format(match_name)
         self.init_yaml()
-        self.outpath = 'docs/theme/graphs/'+match_name+'/'
+        if test_mode:
+            self.outpath = 'test_results/'
+        else:
+            self.outpath = 'docs/theme/graphs/'+match_name+'/'
         pathlib.Path(self.outpath).mkdir(parents=True, exist_ok=True)
 
         self.gps_data = self.get_gps_data()
@@ -460,11 +463,16 @@ class MatchData:
         possession_df = possession_series.join(teamname_series).dropna()
         possession_df = possession_df.loc[start:end]
 
-#         def validation(frame,i):#ポゼッションスタートとエンドがひっくり返っていないかどうかの検証
-#             frame = frame.reset_index(drop=True)
-#             return frame["possession"].loc[2*i-1]=="ポゼッションエンド"
-#         for i in range(1,int(len(possession_df)/2)):
-#             assert validation(possession_df,i), 'ポゼッションスタートとポゼッションエンドが逆転してる'
+        def validation(frame,i):#ポゼッションスタートとエンドがひっくり返っていないかどうかの検証
+            frame = frame.reset_index(drop=True)
+            return (frame["possession"].loc[2*i] == "ポゼッションスタート") & (frame["possession"].loc[2*i+1] == "ポゼッションエンド")
+
+        for i in range(0,int(len(possession_df)/2)):
+            try:
+                assert validation(possession_df,i), 'ポゼッションスタートとポゼッションエンドが逆転してる'
+            except AssertionError as e:
+                print(e)
+                break
 #         def getNearestValue(list, num):
 #             """
 #             概要: リストからある値に最も近い値を返却する関数
