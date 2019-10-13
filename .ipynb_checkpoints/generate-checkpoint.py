@@ -17,6 +17,7 @@ from matplotlib.patches import Arc
 from yaml import Loader
 
 # Creates a dataframe with gps and event data.
+
 class MatchData:
     """
     The MatchData object can is meant to be used as an API to access a certain matches data.
@@ -44,19 +45,22 @@ class MatchData:
         raw event data
     data : tuple
         (gps_data, event_data)
-    start : datetime.time
-        start time of gps
+    start : datetime.timeself.outpath = 'docs/theme/graphs/'+match_name+'/'self.outpath = 'docs/theme/graphs/'+matcself.outpath = 'docs/theme/graphs/'+matcself.outpath = 'docs/theme/graphs/'+match_name+'/'h_name+'/'h_name+'/'
+        start time of gpsself.outpath = 'docs/theme/graphs/'+matchself.outpath = 'docs/theme/graphs/'+match_name+'/'_name+'/'
     end : datetime.time
         end time of gps
 
     """
 
-    def __init__(self, match_name):
+    def __init__(self, match_name, test_mode=False):
         self.match_name = match_name
         self.gps_path = 'data/{0}/gps'.format(match_name)
         self.event_path = 'data/{0}/splyza'.format(match_name)
         self.init_yaml()
-        self.outpath = 'docs/theme/graphs/'+match_name+'/'
+        if test_mode:
+            self.outpath = 'test_results/'
+        else:
+            self.outpath = 'docs/theme/graphs/'+match_name+'/'
         pathlib.Path(self.outpath).mkdir(parents=True, exist_ok=True)
 
         self.gps_data = self.get_gps_data()
@@ -152,19 +156,18 @@ class MatchData:
         for f in os.listdir(path):
             if f.endswith('.csv'):
                 data.append(pd.read_csv('{0}/{1}'.format(path, f), index_col=0))
-
         for i, d in enumerate(data):
             data[i].index = data[i].index.map(lambda x: dt.time(*time.strptime(x[4:12], '%M:%S:%f')[3:6]))
-
+   
         def f(t, offset=None):
-            seconds = (t.hour * 60 + t.minute) * 60 + t.second
+            seconds = (t.hour * 60 + t.minute) * 60 + t.second + t.microsecond
             if offset is not None:
                 seconds += offset
             return seconds
 
         df1 = pd.DataFrame(data[1])#データが前後半逆転していたので、データをひっくり返した
         df2 = pd.DataFrame(data[0])
-        
+
 
         df1.index = df1.index.map(lambda x: f(x))
         df2.index = df2.index.map(lambda x: f(x,df1.index[-1]))
@@ -437,7 +440,7 @@ class MatchData:
         # ポゼッションに関するデータだけ取り出す
         #ポゼッションに関するDataFrame作成する際、「相手チーム」というタグに、ポゼッション以外のタグが紐付いてるため、その行を削除する
         df = self.get_event_data('full')
-        
+
         data1 = []
         index1= []
         for index, row in df.iterrows():
@@ -446,10 +449,10 @@ class MatchData:
                 index1.append(index)#「時間」列の取得
                 data1.append(lists)
         df1 = pd.DataFrame(data1)#DataFrameに変換（このままだと、indexが「時間」になってない）
-        df1.index = index1 #時間  
-       
+        df1.index = index1 #時間
+
         s = df1[0]#default列を抽出
-      
+
         ## default列にある種類のラベルをリストにする
         value_list = s.unique().tolist()
         ## 開始・終了とチーム名情報を取り出す
@@ -457,24 +460,47 @@ class MatchData:
         teamname_series =  pd.DataFrame(s.replace([item for item in value_list if item not in ['筑波大学','相手チーム'] ],np.nan).dropna())
         possession_series.columns = ['possession']
         teamname_series.columns = ['team']
-        possession_df = possession_series.join(teamname_series).dropna()
-        possession_df = possession_df.loc[start:end]     
         
-#         def validation(frame,i):#ポゼッションスタートとエンドがひっくり返っていないかどうかの検証
-#             frame = frame.reset_index(drop=True)
-#             return frame["possession"].loc[2*i-1]=="ポゼッションエンド"
+        
+        class HorizontalDisplay:
+            def __init__(self, *args):
+                self.args = args
+
+            def _repr_html_(self):
+                template = '<div style="float: left; padding: 10px;">{0}</div>'
+                return "\n".join(template.format(arg._repr_html_()) for arg in self.args)
+        pd.set_option("display.max_rows", 6000)
+        
+        
+        
+        possession_df = possession_series.join(teamname_series).dropna()
+        possession_df = possession_df.loc[start:end]
+#         display(HorizontalDisplay(possession_series,teamname_series,possession_df),len(possession_series),len(possession_df))
+#         display(possession_df,len(possession_df))
+        if (possession_df.iloc[0,0] =="ポゼッションエンド") & (possession_df.iloc[-1,0] =="ポゼッションスタート"):
+            possession_df = pd.concat([pd.DataFrame(pd.Series(['ポゼッションスタート', possession_df.iloc[0,1]], index=possession_df.columns, name= start)).T,possession_df])
+            possession_df.loc[end] = ['ポゼッションエンド', possession_df.iloc[-1,1]]
+        elif (possession_df.iloc[0,0] =="ポゼッションエンド") & (possession_df.iloc[-1,0] =="ポゼッションエンド"):
+            possession_df = pd.concat([pd.DataFrame(pd.Series(['ポゼッションスタート', possession_df.iloc[0,1]], index=possession_df.columns, name= start)).T,possession_df])
+#             poossession_df.loc[start] = ['ポゼッションスタート',possession_df.iloc[0,1]]
+        elif (possession_df.iloc[0,0] =="ポゼッションスタート") & (possession_df.iloc[-1,0] =="ポゼッションスタート"):
+            possession_df.loc[end] = ['ポゼッションエンド', possession_df.iloc[-1,1]]
+        else:
+            pass
+
+      
+        
+        def validation(frame,i):#ポゼッションスタートとエンドがひっくり返っていないかどうかの検証
+            frame = frame.reset_index(drop=True)
+            return (frame.iloc[2*i,0] == "ポゼッションエンド") 
+
 #         for i in range(1,int(len(possession_df)/2)):
-#             assert validation(possession_df,i), 'ポゼッションスタートとポゼッションエンドが逆転してる'
-#         def getNearestValue(list, num):
-#             """
-#             概要: リストからある値に最も近い値を返却する関数
-#             @param list: データ配列
-#             @param num: 対象値
-#             @return 対象値に最も近い値
-#             """
-#             # リスト要素と対象値の差分を計算し最小値のインデックスを取得
-#             idx = np.abs(np.asarray(list) - num).argmin()
-#             return list[idx]   
+#             try:
+#                 assert validation(possession_df,i), 'ポゼッションスタートとポゼッションエンドが逆転してる'
+#             except AssertionError as e:
+#                 print(e)
+#                 break
+
 
         out = []
         for team in ['筑波大学', '相手チーム']:
@@ -487,31 +513,9 @@ class MatchData:
             else:
                 out.append(np.diff(times)[::2].sum())
 
-        return out[0], out[1]                    
-#         out = []
-#         for team in ['筑波大学', '相手チーム']:
-#             _s = possession_df['team']
-#             times = _s[_s==team].index.values
-#             #DataFrameの最後が"ポゼッションスタート"で終わってる場合、endの時間を末尾にappendする
-#             if (possession_df["possession"][getNearestValue(times,end)] is "ポゼッションスタート") & (possession_df["possession"][getNearestValue(times,start)] is "ポゼッションエンド"):
-#                 times = np.append(times, end)
-#                 times = np.insert(times,0,start)
-#                 out.append(np.diff(times)[::2].sum())
-                
-#             elif ((possession_df["possession"][getNearestValue(times,end)] is "ポゼッションスタート") & (possession_df["possession"][getNearestValue(times,start)] is "ポゼッションスタート")):
-#                 times = np.append(times, end)
-#                 out.append(np.diff(times)[::2].sum())
-                
-#             elif ((possession_df["possession"][getNearestValue(times,end)] is "ポゼッションエンド") & (possession_df["possession"][getNearestValue(times,start)] is "ポゼッションエンド")):
-#                 times = np.insert(times,0,start)
-#                 out.append(np.diff(times)[::2].sum())
-#             else:
-#                 out.append(np.diff(times)[::2].sum())
-           
-#         return out[0], out[1]
-    
+        return out[0], out[1]
 
-    
+
     def possession_graph(self, times=[(0,90),(0,45),(45,90),(0,15),(15,30),(30,45),(45,60),(60,75),(75,90)]):
         y1 = []
         y2 = []
@@ -536,7 +540,7 @@ class MatchData:
         plt.ylim(0,110)
         plt.title("Possession vs Opponent(%)")
         plt.legend(bbox_to_anchor=(1.01,0.5), loc='center left')
-        plt.show()
+#         plt.show()
         plt.savefig("{0}/{1}.png".format(self.outpath, 'possession_graph') ,bbox_inches='tight', pad_inches=0)
         plt.close()
 
@@ -550,3 +554,5 @@ def main():
         match_data.stats_hbar()
         match_data.rank_table()
         match_data.possession_graph()
+        
+
