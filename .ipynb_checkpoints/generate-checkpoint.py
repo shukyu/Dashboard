@@ -450,47 +450,32 @@ class MatchData:
                 data1.append(lists)
         df1 = pd.DataFrame(data1)#DataFrameに変換（このままだと、indexが「時間」になってない）
         df1.index = index1 #時間
-
         s = df1[0]#default列を抽出
-
-        ## default列にある種類のラベルをリストにする
+## default列にある種類のラベルをリストにする
         value_list = s.unique().tolist()
-        ## 開始・終了とチーム名情報を取り出す
+## 開始・終了とチーム名情報を取り出す
         possession_series = pd.DataFrame(s.replace([item for item in value_list if item not in ['ポゼッションスタート','ポゼッションエンド']],np.nan).dropna())
         teamname_series =  pd.DataFrame(s.replace([item for item in value_list if item not in ['筑波大学','相手チーム'] ],np.nan).dropna())
         possession_series.columns = ['possession']
-        teamname_series.columns = ['team']
-        
-        
-        class HorizontalDisplay:
-            def __init__(self, *args):
-                self.args = args
-
-            def _repr_html_(self):
-                template = '<div style="float: left; padding: 10px;">{0}</div>'
-                return "\n".join(template.format(arg._repr_html_()) for arg in self.args)
-        pd.set_option("display.max_rows", 6000)
-        
-        
-        
+        teamname_series.columns = ['team']      
         possession_df = possession_series.join(teamname_series).dropna()
         possession_df = possession_df.loc[start:end]
-#         display(HorizontalDisplay(possession_series,teamname_series,possession_df),len(possession_series),len(possession_df))
-#         display(possession_df,len(possession_df))
+        
+#DataFrameの先頭と末尾のポゼッションの確認
+#もし先頭が"ポゼッションエンド"、または末尾が"ポゼッションスタート"なら495行目のdiff計算がずれてポゼッションがうまく表示されないから、それw防ぐ処理
         if (possession_df.iloc[0,0] =="ポゼッションエンド") & (possession_df.iloc[-1,0] =="ポゼッションスタート"):
             possession_df = pd.concat([pd.DataFrame(pd.Series(['ポゼッションスタート', possession_df.iloc[0,1]], index=possession_df.columns, name= start)).T,possession_df])
             possession_df.loc[end] = ['ポゼッションエンド', possession_df.iloc[-1,1]]
         elif (possession_df.iloc[0,0] =="ポゼッションエンド") & (possession_df.iloc[-1,0] =="ポゼッションエンド"):
             possession_df = pd.concat([pd.DataFrame(pd.Series(['ポゼッションスタート', possession_df.iloc[0,1]], index=possession_df.columns, name= start)).T,possession_df])
-#             poossession_df.loc[start] = ['ポゼッションスタート',possession_df.iloc[0,1]]
         elif (possession_df.iloc[0,0] =="ポゼッションスタート") & (possession_df.iloc[-1,0] =="ポゼッションスタート"):
             possession_df.loc[end] = ['ポゼッションエンド', possession_df.iloc[-1,1]]
         else:
             pass
 
-      
         
-        def validation(frame,i):#ポゼッションスタートとエンドがひっくり返っていないかどうかの検証
+#ポゼッションスタートとエンドがひっくり返っていないかどうかの検証
+        def validation(frame,i):
             frame = frame.reset_index(drop=True)
             return (frame.iloc[2*i,0] == "ポゼッションエンド") 
 
@@ -501,18 +486,11 @@ class MatchData:
 #                 print(e)
 #                 break
 
-
         out = []
         for team in ['筑波大学', '相手チーム']:
             _s = possession_df['team']
             times = _s[_s==team].index.values
-
-            if len(times) % 2 == 0:
-                times = np.append(times, end)
-                out.append(np.diff(times)[::2].sum())
-            else:
-                out.append(np.diff(times)[::2].sum())
-
+            out.append(np.diff(times)[::2].sum())
         return out[0], out[1]
 
 
