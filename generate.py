@@ -17,6 +17,7 @@ from matplotlib.patches import Arc
 from yaml import Loader
 
 # Creates a dataframe with gps and event data.
+
 class MatchData:
     """
     The MatchData object can is meant to be used as an API to access a certain matches data.
@@ -155,7 +156,6 @@ class MatchData:
         for f in os.listdir(path):
             if f.endswith('.csv'):
                 data.append(pd.read_csv('{0}/{1}'.format(path, f), index_col=0))
-
         for i, d in enumerate(data):
             data[i].index = data[i].index.map(lambda x: dt.time(*time.strptime(x[4:12], '%M:%S:%f')[3:6]))
 
@@ -450,12 +450,10 @@ class MatchData:
                 data1.append(lists)
         df1 = pd.DataFrame(data1)#DataFrameに変換（このままだと、indexが「時間」になってない）
         df1.index = index1 #時間
-
         s = df1[0]#default列を抽出
-
-        ## default列にある種類のラベルをリストにする
+## default列にある種類のラベルをリストにする
         value_list = s.unique().tolist()
-        ## 開始・終了とチーム名情報を取り出す
+## 開始・終了とチーム名情報を取り出す
         possession_series = pd.DataFrame(s.replace([item for item in value_list if item not in ['ポゼッションスタート','ポゼッションエンド']],np.nan).dropna())
         teamname_series =  pd.DataFrame(s.replace([item for item in value_list if item not in ['筑波大学','相手チーム'] ],np.nan).dropna())
         possession_series.columns = ['possession']
@@ -463,61 +461,38 @@ class MatchData:
         possession_df = possession_series.join(teamname_series).dropna()
         possession_df = possession_df.loc[start:end]
 
-        def validation(frame,i):#ポゼッションスタートとエンドがひっくり返っていないかどうかの検証
-            frame = frame.reset_index(drop=True)
-            return (frame["possession"].loc[2*i] == "ポゼッションスタート") & (frame["possession"].loc[2*i+1] == "ポゼッションエンド")
 
-        for i in range(0,int(len(possession_df)/2)):
-            try:
-                assert validation(possession_df,i), 'ポゼッションスタートとポゼッションエンドが逆転してる'
-            except AssertionError as e:
-                print(e)
-                break
-#         def getNearestValue(list, num):
-#             """
-#             概要: リストからある値に最も近い値を返却する関数
-#             @param list: データ配列
-#             @param num: 対象値
-#             @return 対象値に最も近い値
-#             """
-#             # リスト要素と対象値の差分を計算し最小値のインデックスを取得
-#             idx = np.abs(np.asarray(list) - num).argmin()
-#             return list[idx]
+#DataFrameの先頭と末尾のポゼッションの確認
+#もし先頭が"ポゼッションエンド"、または末尾が"ポゼッションスタート"なら495行目のdiff計算がずれてポゼッションがうまく表示されないから、それw防ぐ処理
+        if (possession_df.iloc[0,0] =="ポゼッションエンド") & (possession_df.iloc[-1,0] =="ポゼッションスタート"):
+            possession_df = pd.concat([pd.DataFrame(pd.Series(['ポゼッションスタート', possession_df.iloc[0,1]], index=possession_df.columns, name= start)).T,possession_df])
+            possession_df.loc[end] = ['ポゼッションエンド', possession_df.iloc[-1,1]]
+        elif (possession_df.iloc[0,0] =="ポゼッションエンド") & (possession_df.iloc[-1,0] =="ポゼッションエンド"):
+            possession_df = pd.concat([pd.DataFrame(pd.Series(['ポゼッションスタート', possession_df.iloc[0,1]], index=possession_df.columns, name= start)).T,possession_df])
+        elif (possession_df.iloc[0,0] =="ポゼッションスタート") & (possession_df.iloc[-1,0] =="ポゼッションスタート"):
+            possession_df.loc[end] = ['ポゼッションエンド', possession_df.iloc[-1,1]]
+        else:
+            pass
+
+
+#ポゼッションスタートとエンドがひっくり返っていないかどうかの検証
+        def validation(frame,i):
+            frame = frame.reset_index(drop=True)
+            return (frame.iloc[2*i,0] == "ポゼッションエンド")
+
+#         for i in range(1,int(len(possession_df)/2)):
+#             try:
+#                 assert validation(possession_df,i), 'ポゼッションスタートとポゼッションエンドが逆転してる'
+#             except AssertionError as e:
+#                 print(e)
+#                 break
 
         out = []
         for team in ['筑波大学', '相手チーム']:
             _s = possession_df['team']
             times = _s[_s==team].index.values
-
-            if len(times) % 2 == 0:
-                times = np.append(times, end)
-                out.append(np.diff(times)[::2].sum())
-            else:
-                out.append(np.diff(times)[::2].sum())
-
+            out.append(np.diff(times)[::2].sum())
         return out[0], out[1]
-#         out = []
-#         for team in ['筑波大学', '相手チーム']:
-#             _s = possession_df['team']
-#             times = _s[_s==team].index.values
-#             #DataFrameの最後が"ポゼッションスタート"で終わってる場合、endの時間を末尾にappendする
-#             if (possession_df["possession"][getNearestValue(times,end)] is "ポゼッションスタート") & (possession_df["possession"][getNearestValue(times,start)] is "ポゼッションエンド"):
-#                 times = np.append(times, end)
-#                 times = np.insert(times,0,start)
-#                 out.append(np.diff(times)[::2].sum())
-
-#             elif ((possession_df["possession"][getNearestValue(times,end)] is "ポゼッションスタート") & (possession_df["possession"][getNearestValue(times,start)] is "ポゼッションスタート")):
-#                 times = np.append(times, end)
-#                 out.append(np.diff(times)[::2].sum())
-
-#             elif ((possession_df["possession"][getNearestValue(times,end)] is "ポゼッションエンド") & (possession_df["possession"][getNearestValue(times,start)] is "ポゼッションエンド")):
-#                 times = np.insert(times,0,start)
-#                 out.append(np.diff(times)[::2].sum())
-#             else:
-#                 out.append(np.diff(times)[::2].sum())
-
-#         return out[0], out[1]
-
 
 
     def possession_graph(self, times=[(0,90),(0,45),(45,90),(0,15),(15,30),(30,45),(45,60),(60,75),(75,90)]):
@@ -544,6 +519,7 @@ class MatchData:
         plt.ylim(0,110)
         plt.title("Possession vs Opponent(%)")
         plt.legend(bbox_to_anchor=(1.01,0.5), loc='center left')
+#         plt.show()
         plt.savefig("{0}/{1}.png".format(self.outpath, 'possession_graph') ,bbox_inches='tight', pad_inches=0)
         plt.close()
 
