@@ -461,6 +461,7 @@ class MatchData:
         possession_df = possession_series.join(teamname_series).dropna()
         possession_df = possession_df.loc[start:end]
         
+        
 #DataFrameの先頭と末尾のポゼッションの確認
 #もし先頭が"ポゼッションエンド"、または末尾が"ポゼッションスタート"なら495行目のdiff計算がずれてポゼッションがうまく表示されないから、それw防ぐ処理
         if (possession_df.iloc[0,0] =="ポゼッションエンド") & (possession_df.iloc[-1,0] =="ポゼッションスタート"):
@@ -472,6 +473,7 @@ class MatchData:
             possession_df.loc[end] = ['ポゼッションエンド', possession_df.iloc[-1,1]]
         else:
             pass
+        display(possession_df)
 
         
 #ポゼッションスタートとエンドがひっくり返っていないかどうかの検証

@@ -158,7 +158,7 @@ class MatchData:
                 data.append(pd.read_csv('{0}/{1}'.format(path, f), index_col=0))
         for i, d in enumerate(data):
             data[i].index = data[i].index.map(lambda x: dt.time(*time.strptime(x[4:12], '%M:%S:%f')[3:6]))
-   
+
         def f(t, offset=None):
             seconds = (t.hour * 60 + t.minute) * 60 + t.second + t.microsecond
             if offset is not None:
@@ -457,10 +457,11 @@ class MatchData:
         possession_series = pd.DataFrame(s.replace([item for item in value_list if item not in ['ポゼッションスタート','ポゼッションエンド']],np.nan).dropna())
         teamname_series =  pd.DataFrame(s.replace([item for item in value_list if item not in ['筑波大学','相手チーム'] ],np.nan).dropna())
         possession_series.columns = ['possession']
-        teamname_series.columns = ['team']      
+        teamname_series.columns = ['team']
         possession_df = possession_series.join(teamname_series).dropna()
         possession_df = possession_df.loc[start:end]
-        
+
+
 #DataFrameの先頭と末尾のポゼッションの確認
 #もし先頭が"ポゼッションエンド"、または末尾が"ポゼッションスタート"なら495行目のdiff計算がずれてポゼッションがうまく表示されないから、それw防ぐ処理
         if (possession_df.iloc[0,0] =="ポゼッションエンド") & (possession_df.iloc[-1,0] =="ポゼッションスタート"):
@@ -473,11 +474,11 @@ class MatchData:
         else:
             pass
 
-        
+
 #ポゼッションスタートとエンドがひっくり返っていないかどうかの検証
         def validation(frame,i):
             frame = frame.reset_index(drop=True)
-            return (frame.iloc[2*i,0] == "ポゼッションエンド") 
+            return (frame.iloc[2*i,0] == "ポゼッションエンド")
 
 #         for i in range(1,int(len(possession_df)/2)):
 #             try:
@@ -532,5 +533,3 @@ def main():
         match_data.stats_hbar()
         match_data.rank_table()
         match_data.possession_graph()
-        
-
