@@ -9,7 +9,7 @@ tkb_second: 1
 tkb_total: 1
 opp_first: 0
 opp_second: 2
-opp_total: 1
+opp_total: 2
 slug: 17sec_vsChuo
 p1: 35.716871, 139.568466
 p2: 35.717128, 139.567786
