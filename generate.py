@@ -156,8 +156,10 @@ class MatchData:
         for f in os.listdir(path):
             if f.endswith('.csv'):
                 data.append(pd.read_csv('{0}/{1}'.format(path, f), index_col=0))
+        print(data)
         for i, d in enumerate(data):
             data[i].index = data[i].index.map(lambda x: dt.time(*time.strptime(x[4:12], '%M:%S:%f')[3:6]))
+
 
         def f(t, offset=None):
             seconds = (t.hour * 60 + t.minute) * 60 + t.second + t.microsecond
@@ -500,6 +502,8 @@ class MatchData:
         y2 = []
         x = []
         for start, end in times:
+            # if self.possession_time(0,2700):
+            #     possession_time(0,2700) =
             _y1, _y2 = self.possession_time(start*60, end*60)
             total = _y1+_y2
             y1.append(_y1/total*100)
@@ -531,4 +535,4 @@ def main():
         match_data = MatchData(match)
         match_data.stats_hbar()
         match_data.rank_table()
-        match_data.possession_graph()
+        # match_data.possession_graph()
