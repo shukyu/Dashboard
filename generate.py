@@ -156,11 +156,9 @@ class MatchData:
         for f in os.listdir(path):
             if f.endswith('.csv'):
                 data.append(pd.read_csv('{0}/{1}'.format(path, f), index_col=0))
-        print(data)
+
         for i, d in enumerate(data):
             data[i].index = data[i].index.map(lambda x: dt.time(*time.strptime(x[4:12], '%M:%S:%f')[3:6]))
-
-
         def f(t, offset=None):
             seconds = (t.hour * 60 + t.minute) * 60 + t.second + t.microsecond
             if offset is not None:
