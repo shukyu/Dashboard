@@ -151,22 +151,23 @@ class MatchData:
         """
 
         path = self.event_path
-        flist = os.listdir(path)
+        flist = sorted(os.listdir(path), reverse=False)
         data = []
-        for f in os.listdir(path):
+        for f in flist:
             if f.endswith('.csv'):
                 data.append(pd.read_csv('{0}/{1}'.format(path, f), index_col=0))
 
         for i, d in enumerate(data):
             data[i].index = data[i].index.map(lambda x: dt.time(*time.strptime(x[4:12], '%M:%S:%f')[3:6]))
+
         def f(t, offset=None):
             seconds = (t.hour * 60 + t.minute) * 60 + t.second + t.microsecond
             if offset is not None:
                 seconds += offset
             return seconds
 
-        df1 = pd.DataFrame(data[1])#データが前後半逆転していたので、データをひっくり返した
-        df2 = pd.DataFrame(data[0])
+        df1 = pd.DataFrame(data[0])#データが前後半逆転していたので、データをひっくり返した
+        df2 = pd.DataFrame(data[1])
 
 
         df1.index = df1.index.map(lambda x: f(x))
@@ -471,7 +472,13 @@ class MatchData:
             new_end = pd.DataFrame({'possession': 'ポゼッションエンド', 'team': possession_df.iloc[-1]['team']}, index=[end])
             possession_df = pd.concat([possession_df, new_end])
         
-        return possession_df
+        def test_order():
+            for i in range(len(possession_df)):
+                if i % 2 == 0:
+                    assert possession_df.iloc[i]['possession'] == 'ポゼッションスタート', df.loc[possession_df.index[i-1]:possession_df.index[i+1]]
+                if i % 2 == 1:
+                    assert possession_df.iloc[i]['possession'] == 'ポゼッションエンド', df.loc[possession_df.index[i]:possession_df.index[i+1]]
+        test_order()
 
         out = []
         for team in ['筑波大学', '相手チーム']:
@@ -480,8 +487,37 @@ class MatchData:
             out.append(np.diff(times)[::2].sum())
         return out[0], out[1],
 
+    def possession_graph2(self, times=[(0,90),(0,45),(45,90),(0,15),(15,30),(30,45),(45,60),(60,75),(75,90)], show=False):
+        y1 = []
+        y2 = []
+        x = []
+        for start, end in times:
+            _y1, _y2 = self.possession_time(start*60, end*60)
+            total = _y1+_y2
+            y1.append(_y1)
+            y2.append(_y2)
+            x.append("{0}~{1}".format(start,end))
 
-    def possession_graph(self, times=[(0,90),(0,45),(45,90),(0,15),(15,30),(30,45),(45,60),(60,75),(75,90)]):
+        plt.figure(figsize=(10,5))
+        # stack bars
+        plt.bar(x, y1, label="Tsukuba", color = "blue")
+        plt.bar(x, y2 ,bottom=y1,label= "Opponent",color ="red")
+
+        # add text annotation corresponding to the percentage of each data.
+        for xpos, ypos, yval in zip(x, y1, y1):
+            plt.text(xpos, ypos/2, "%d"%yval, ha="center", va="center",fontsize =20,color="white")
+        for xpos, ypos, yval in zip(x, y1, y2):
+            plt.text(xpos, ypos+yval/2, "%d"%yval, ha="center", va="center",fontsize =20,color="white")
+        # plt.ylim(0,110)
+        plt.title("Possession vs Opponent(%)")
+        plt.legend(bbox_to_anchor=(1.01,0.5), loc='center left')
+        if show:
+             plt.show()
+        else:
+            plt.savefig("{0}/{1}.png".format(self.outpath, 'possession_graph') ,bbox_inches='tight', pad_inches=0)
+            plt.close()
+
+    def possession_graph(self, times=[(0,90),(0,45),(45,90),(0,15),(15,30),(30,45),(45,60),(60,75),(75,90)], show=False):
         y1 = []
         y2 = []
         x = []
@@ -507,8 +543,11 @@ class MatchData:
         plt.ylim(0,110)
         plt.title("Possession vs Opponent(%)")
         plt.legend(bbox_to_anchor=(1.01,0.5), loc='center left')
-        plt.savefig("{0}/{1}.png".format(self.outpath, 'possession_graph') ,bbox_inches='tight', pad_inches=0)
-        plt.close()
+        if show:
+             plt.show()
+        else:
+            plt.savefig("{0}/{1}.png".format(self.outpath, 'possession_graph') ,bbox_inches='tight', pad_inches=0)
+            plt.close()
 
 
 def main():
