@@ -558,4 +558,4 @@ def main():
         match_data = MatchData(match)
         match_data.stats_hbar()
         match_data.rank_table()
-        # match_data.possession_graph()
+        match_data.possession_graph()
