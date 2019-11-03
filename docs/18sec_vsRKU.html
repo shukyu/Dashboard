@@ -162,15 +162,182 @@
                 </nav>
                 <!-- End of Topbar -->
 
+
+
 <!-- Begin Page Content -->
 <div class="container justify-content-center text-center">
   <!--試合情報ここから-->
   <div class="row justify-content-center text-center">
     <div class="col-4">
-      <h1>チームスタッツ</h1>
+      <h1>筑波大学</h1>
+      <img src="https://shukyu.github.io/Dashboard/theme/images/teamlogo/tsukuba.png" style="height:200px; width:200px" class="img-thumbnail" alt="Responsive image">
+    </div>
+    <div class="col-4">
+      <table class="table">
+        <thead>
+          <tr>
+            <th colspan="5"></th>
+          </tr>
+          <tr>
+            <th colspan="5">関東リーグ第19節</th>
+          </tr>
+          <tr>
+            <th colspan="5">たつのこフィールド</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th rowspan="2">
+              <h2>0</h2>
+            </th>
+            <th>0</th>
+            <th>-</th>
+            <th>1</th>
+            <th rowspan="2">
+              <h2>1</h2>
+            </th>
+          </tr>
+          <tr>
+            <th>0</th>
+            <th>-</th>
+            <th>0</th>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="col-4">
+      <h1>流通経済大学</h1>
+      <img src="https://shukyu.github.io/Dashboard/theme/images/teamlogo/RKU.png" style="height:200px; width:200px" class="img-thumbnail" alt="Responsive image">
     </div>
   </div>
+  <!--試合情報ここまで-->
+  <!--簡単スタッツここから-->
+  <div class="justify-content-center text-center">
+    <h1>全体のスタッツ</h1>
+    <h2>チームスタッツ</h2>
+    <div class="row">
+      <div class="col-3"><img class="graph img-fluid" src="https://shukyu.github.io/Dashboard/theme/graphs/18sec_vsRKU/hbar_atk.png" /></div>
+      <div class="col-3"><img class="graph img-fluid" src="https://shukyu.github.io/Dashboard/theme/graphs/18sec_vsRKU/hbar_def.png" /></div>
+      <div class="col-3"><img class="graph img-fluid" src="https://shukyu.github.io/Dashboard/theme/graphs/18sec_vsRKU/hbar_foul.png" /></div>
+      <div class="col-3"><img class="graph img-fluid" src="https://shukyu.github.io/Dashboard/theme/graphs/18sec_vsRKU/hbar_set.png" /></div>
+    </div>
+    <h3>個人スタッツ</h3>
+    <div class="row text-center">
+      <div class="col-3"><img class="graph img-fluid" src="https://shukyu.github.io/Dashboard/theme/graphs/18sec_vsRKU/ドリブル.png" /></div>
+      <div class="col-3"><img class="graph img-fluid" src="https://shukyu.github.io/Dashboard/theme/graphs/18sec_vsRKU/枠内シュート.png" /></div>
+      <div class="col-3"><img class="graph img-fluid" src="https://shukyu.github.io/Dashboard/theme/graphs/18sec_vsRKU/枠外シュート.png" /></div>
+      <div class="col-3"><img class="graph img-fluid" src="https://shukyu.github.io/Dashboard/theme/graphs/18sec_vsRKU/クロス.png" /></div>
+      <div class="col-3"><img class="graph img-fluid" src="https://shukyu.github.io/Dashboard/theme/graphs/18sec_vsRKU/インターセプト.png" /></div>
+      <div class="col-3"><img class="graph img-fluid" src="https://shukyu.github.io/Dashboard/theme/graphs/18sec_vsRKU/カット.png" /></div>
+      <div class="col-3"><img class="graph img-fluid" src="https://shukyu.github.io/Dashboard/theme/graphs/18sec_vsRKU/クリア.png" /></div>
+      <div class="col-3"><img class="graph img-fluid" src="https://shukyu.github.io/Dashboard/theme/graphs/18sec_vsRKU/ブロック.png" /></div>
+      <div class="col-3"><img class="graph img-fluid" src="https://shukyu.github.io/Dashboard/theme/graphs/18sec_vsRKU/シュートブロック.png" /></div>
+    </div>
+    <h4>ポゼッション</h4>
+    <div class="row">
+      <div class="col-12"><img class="graph img-fluid" src="https://shukyu.github.io/Dashboard/theme/graphs/18sec_vsRKU/possession_graph.png" /></div>
+    </div>
+  </div>
+
+  <!--簡単スタッツここから-->
+  <hr>
+  <!--ネットワークここから-->
+  <h2>ネットワーク分析</h2>
+  <h3>パスネットワーク</h3>
+  <div class="row justify-content-center">
+    <div class='col-12'>
+      <ul class="nav nav-tabs" id="passNetwork" role="tablist">
+        <li class="nav-item">
+          <a class="nav-link active" id="passNetwork-0-tab" data-toggle="tab" href="#passNetwork-0" role="tab"
+            aria-controls="home" aria-selected="true">交代前</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" id="passNetwork-1-tab" data-toggle="tab" href="#passNetwork-1" role="tab"
+            aria-controls="profile" aria-selected="false">交代１後</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" id="passNetwork-2-tab" data-toggle="tab" href="#passNetwork-2" role="tab"
+            aria-controls="contact" aria-selected="false">交代２後</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" id="passNetwork-0-tab" data-toggle="tab" href="#passNetwork-3" role="tab"
+            aria-controls="contact" aria-selected="false">交代３後</a>
+        </li>
+      </ul>
+      <div class="tab-content" id="passNetworkContent">
+        <div class="tab-pane fade show active" id="passNetwork-0" role="tabpanel" aria-labelledby="passNetwork-0-tab">
+          <img class="graph img-fluid" src="https://shukyu.github.io/Dashboard/theme/graphs/18sec_vsRKU/pitch.png" />
+        </div>
+        <div class="tab-pane fade" id="passNetwork-1" role="tabpanel" aria-labelledby="passNetwork-1-tab">
+          <img class="graph img-fluid" src="https://shukyu.github.io/Dashboard/theme/graphs/18sec_vsRKU/pitch.png" />
+        </div>
+        <div class="tab-pane fade" id="passNetwork-2" role="tabpanel" aria-labelledby="passNetwork-2-tab">
+          <img class="graph img-fluid" src="https://shukyu.github.io/Dashboard/theme/graphs/18sec_vsRKU/pitch.png" />
+        </div>
+        <div class="tab-pane fade" id="passNetwork-3" role="tabpanel" aria-labelledby="passNetwork-3-tab">
+          <img class="graph img-fluid" src="https://shukyu.github.io/Dashboard/theme/graphs/18sec_vsRKU/pitch.png" />
+        </div>
+      </div>
+    </div>
+  </div>
+  <h3>距離ネットワーク</h3>
+  <div class="row justify-content-center">
+    <div class='col-12'>
+      <ul class="nav nav-tabs" id="distNetwork" role="tablist">
+        <li class="nav-item">
+          <a class="nav-link active" id="distNetwork-0-tab" data-toggle="tab" href="#distNetwork-0" role="tab"
+            aria-controls="home" aria-selected="true">交代前</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" id="distNetwork-1-tab" data-toggle="tab" href="#distNetwork-1" role="tab"
+            aria-controls="profile" aria-selected="false">交代１後</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" id="distNetwork-2-tab" data-toggle="tab" href="#distNetwork-2" role="tab"
+            aria-controls="contact" aria-selected="false">交代２後</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" id="distNetwork-0-tab" data-toggle="tab" href="#distNetwork-3" role="tab"
+            aria-controls="contact" aria-selected="false">交代３後</a>
+        </li>
+      </ul>
+      <div class="tab-content" id="distNetworkContent">
+        <div class="tab-pane fade show active" id="distNetwork-0" role="tabpanel" aria-labelledby="distNetwork-0-tab">
+          <img class="graph img-fluid" src="https://shukyu.github.io/Dashboard/theme/graphs/18sec_vsRKU/pitch.png" />
+        </div>
+        <div class="tab-pane fade" id="distNetwork-1" role="tabpanel" aria-labelledby="distNetwork-1-tab">
+          <img class="graph img-fluid" src="https://shukyu.github.io/Dashboard/theme/graphs/18sec_vsRKU/pitch.png" />
+        </div>
+        <div class="tab-pane fade" id="distNetwork-2" role="tabpanel" aria-labelledby="distNetwork-2-tab">
+          <img class="graph img-fluid" src="https://shukyu.github.io/Dashboard/theme/graphs/18sec_vsRKU/pitch.png" />
+        </div>
+        <div class="tab-pane fade" id="distNetwork-3" role="tabpanel" aria-labelledby="distNetwork-3-tab">
+          <img class="graph img-fluid" src="https://shukyu.github.io/Dashboard/theme/graphs/18sec_vsRKU/pitch.png" />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr>
+
+  <div class="justify-content-center text-center">
+    <h2>攻撃の詳細</h2>
+    <div class='row'>
+      <div class="col-12">
+        <img class="graph img-fluid" src="https://shukyu.github.io/Dashboard/theme/graphs/18sec_vsRKU/pitchthird.png" />
+      </div>
+    </div>
+  </div>
+
+  <hr>
+  <div class="justify-content-center text-center">
+    <h2>守備の詳細</h2>
+    <h3></h3>
+    <h3></h3>
+  </div>
+
 </div>
+
             </div>
             <!-- Footer -->
             <footer class="sticky-footer bg-white">

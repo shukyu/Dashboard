@@ -551,10 +551,10 @@ class MatchData:
 
 
 def main():
-    for match in os.listdir('data/'):
+    for match in sorted(os.listdir('data/')):
         if match[0] == ".":
             continue
-        print(match[0])
+        print(match)
         match_data = MatchData(match)
         match_data.stats_hbar()
         match_data.rank_table()

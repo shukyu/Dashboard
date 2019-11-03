@@ -46,4 +46,4 @@ THEME = "myTheme"
 import sys
 sys.path.insert(0, './')
 from generate import main
-main()
+# main()
