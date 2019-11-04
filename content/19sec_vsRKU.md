@@ -10,7 +10,7 @@ tkb_total: 0
 opp_first: 1
 opp_second: 0
 opp_total: 1
-slug: 18sec_vsRKU
+slug: 19sec_vsRKU
 p1: 35.716871, 139.568466
 p2: 35.717128, 139.567786
 p3: 35.717730, 139.568953
