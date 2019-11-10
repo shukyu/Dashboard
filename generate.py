@@ -66,6 +66,8 @@ class MatchData:
         self.gps_data = self.get_gps_data()
         self.event_data = self.get_event_data('full')
         self.data = self.generate_data()
+        self.test = self.test_df()
+        
 
     def init_yaml(self):
         """Converts .md to yaml
@@ -166,16 +168,25 @@ class MatchData:
                 seconds += offset
             return seconds
 
-        df1 = pd.DataFrame(data[0])#データが前後半逆転していたので、データをひっくり返した
+        df1 = pd.DataFrame(data[0])
         df2 = pd.DataFrame(data[1])
-
-
         df1.index = df1.index.map(lambda x: f(x))
         df2.index = df2.index.map(lambda x: f(x,df1.index[-1]))
         df =  df1.append(df2)
-
         d = {'h1':df1,'h2':df2, 'full':df}
         return d[mode]
+
+    def test_df(self):
+        df = self.get_event_data("full")
+        df = df[df['セットプレー'] != "キックオフ"] #キックオフの情報はあらかじめ消去しておく
+        df_opp = df[df['default'] == '相手チーム']
+        df_tsukuba = df[df['default'] != '相手チーム'] 
+        def check(df_name):
+            for index, row in df_name.iterrows():
+                if row["セットプレー"] is not np.nan:
+                    assert row["default"] is not np.nan or row["選手名"] is not np.nan , row 
+        for team in [df_opp,df_tsukuba]:
+            return check(team)
 
     def generate_data(self):
         """Converts .md to yaml
@@ -192,10 +203,18 @@ class MatchData:
         gps_data = self.gps_data
         event_data = self.event_data
         return gps_data, event_data
-
+    
     def get_count(self, attr):
         try:
             d = self.event_data
+            #相手チームの反則とセットプレーを消す
+            drop_list = []
+            for i in range(0,len(d),1):
+                if d.iloc[i]["セットプレー"] is not np.nan or d.iloc[i]["反則"] is not np.nan :
+                    if d.iloc[i]["default"] == "相手チーム":
+                        drop_list.append(d.iloc[i].name)
+            d = d.drop(drop_list)
+            
             value = d.apply(pd.value_counts,axis=0).apply(lambda x: x.max(), axis=1)[attr]
         except Exception as e:
             print(e)
