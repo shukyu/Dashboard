@@ -470,7 +470,6 @@ class MatchData:
                 data1.append(lists)
         df1 = pd.DataFrame(data1)#DataFrameに変換（このままだと、indexが「時間」になってない）
         df1.index = index1 #時間
-
         s = df1[0]#default列を抽出
 
         ## default列にある種類のラベルをリストにする
@@ -511,12 +510,13 @@ class MatchData:
         y2 = []
         x = []
         for start, end in times:
-            _y1, _y2 = self.possession_time(start*60, end*60)
+            _y1, _y2 = self.possession_time(start*60, end*60) 
             total = _y1+_y2
             y1.append(_y1)
             y2.append(_y2)
             x.append("{0}~{1}".format(start,end))
-
+            
+        
         plt.figure(figsize=(10,5))
         # stack bars
         plt.bar(x, y1, label="Tsukuba", color = "blue")
@@ -541,9 +541,10 @@ class MatchData:
         y2 = []
         x = []
         for start, end in times:
-            # if self.possession_time(0,2700):
-            #     possession_time(0,2700) =
-            _y1, _y2 = self.possession_time(start*60, end*60)
+            try:
+                _y1, _y2 = self.possession_time(start*60, end*60)
+            except IndexError:
+                continue
             total = _y1+_y2
             y1.append(_y1/total*100)
             y2.append(_y2/total*100)
